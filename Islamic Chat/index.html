@@ -216,6 +216,33 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .inst-btn.show{display:flex;}
 .inst-btn:hover{background:var(--gold);color:#000;}
 
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--gold);
+  cursor: pointer;
+  margin-right: 10px;
+}
+@media (max-width: 680px) {
+  .mobile-menu-btn { display: block; }
+  .sidebar {
+    position: fixed;
+    left: -280px;
+    top: 56px;
+    bottom: 0;
+    width: 260px;
+    z-index: 200;
+    transition: left 0.3s ease;
+    background: var(--bg2);
+    border-right: 1px solid var(--bdr);
+    box-shadow: 2px 0 12px rgba(0,0,0,0.3);
+  }
+  .sidebar.open { left: 0; }
+  .main { margin-left: 0; }
+}
+
 /* USER DROPDOWN */
 .udrop{position:absolute;top:calc(100% + 8px);right:0;background:var(--surf);border:1px solid var(--bdr);
   border-radius:10px;padding:6px;min-width:180px;z-index:200;display:none;box-shadow:0 8px 32px rgba(0,0,0,.4);}
@@ -498,6 +525,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 <!-- ══ TOPBAR ══ -->
 <header class="topbar">
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
   <a class="logo" href="#">
     <div class="logo-mark">🕌</div>
     <div><div class="logo-name">Islamic Chat</div><div class="logo-sub">AI Islamic Companion</div></div>
@@ -549,14 +577,16 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     <div class="dua-war">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً</div>
     <div class="dua-wtr">"Our Lord, give us good in this world and good in the Hereafter." — Al-Baqarah 2:201</div>
   </div>
-  <div class="pt-w">
-    <div class="pt-wl">Today's Prayers · Karachi</div>
-    <div class="ptr"><span class="ptn">Fajr</span><span class="ptt">5:12 AM</span></div>
-    <div class="ptr"><span class="ptn">Dhuhr</span><span class="ptt">12:30 PM</span></div>
-    <div class="ptr next"><span class="ptn">Asr <span class="pbadge">NEXT</span></span><span class="ptt">3:47 PM</span></div>
-    <div class="ptr"><span class="ptn">Maghrib</span><span class="ptt">6:22 PM</span></div>
-    <div class="ptr"><span class="ptn">Isha</span><span class="ptt">7:48 PM</span></div>
-  </div>
+  <div class="pt-w" id="ptWidget">
+  <div class="pt-wl">🕐 Prayer Times · <span id="ptCityName">Karachi</span></div>
+  <div id="ptWidgetList">
+     <div class="ptr"><span class="ptn">Fajr</span><span class="ptt">--:--</span></div>
+     <div class="ptr"><span class="ptn">Dhuhr</span><span class="ptt">--:--</span></div>
+     <div class="ptr next"><span class="ptn">Asr <span class="pbadge">NEXT</span></span><span class="ptt">--:--</span></div>
+     <div class="ptr"><span class="ptn">Maghrib</span><span class="ptt">--:--</span></div>
+     <div class="ptr"><span class="ptn">Isha</span><span class="ptt">--:--</span></div>
+   </div>
+ </div>
   <div class="up-banner" id="sideUpgrade">
     <h4>✦ Unlock Premium</h4>
     <p>Deep Tafsir · Audio Quran · Learning Plan · Unlimited AI</p>
@@ -738,26 +768,24 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
   <!-- ── PRAYER TIMES VIEW ── -->
   <div id="vPrayer" class="hidden panel">
-    <div class="ptitle">🕐 Prayer Times</div>
-    <div class="psub">Karachi, Pakistan · Daily prayer schedule</div>
-    <div class="ptfc">
-      <div class="ptcity">📍 Karachi, Pakistan</div>
-      <div class="pthijri">21 Ramadan 1446 AH · April 2026</div>
-      <div class="ptg">
-        <div class="pti"><div class="ptin">Fajr</div><div class="ptit2">5:12</div><div class="ptnl">AM</div></div>
-        <div class="pti"><div class="ptin">Sunrise</div><div class="ptit2">6:28</div><div class="ptnl">AM</div></div>
-        <div class="pti"><div class="ptin">Dhuhr</div><div class="ptit2">12:30</div><div class="ptnl">PM</div></div>
-        <div class="pti act"><div class="ptin">Asr ▲ NEXT</div><div class="ptit2">3:47</div><div class="ptnl">PM</div></div>
-        <div class="pti"><div class="ptin">Maghrib</div><div class="ptit2">6:22</div><div class="ptnl">PM</div></div>
-        <div class="pti"><div class="ptin">Isha</div><div class="ptit2">7:48</div><div class="ptnl">PM</div></div>
-      </div>
-    </div>
-    <div class="vcard">
-      <div class="vref">✦ The Command of Prayer</div>
-      <div class="var2">إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</div>
-      <div class="ven">"Indeed, prayer has been decreed upon the believers a decree of specified times." — An-Nisa 4:103</div>
-    </div>
+  <div class="ptitle">🕐 Prayer Times</div>
+  <div class="psub">Based on your current location</div>
+  <div class="ptfc" id="prayerMainCard">
+    <div class="ptcity">📍 <span id="prayerCityName">Detecting...</span></div>
+    <div class="pthijri" id="prayerHijri">--</div>
+    <div class="ptg" id="prayerGrid"></div>
   </div>
+  <div class="prow" style="justify-content: center; gap: 12px;">
+    <button class="rbtn" onclick="getLocationPrayerTimes()">📍 Use My Location</button>
+    <input type="text" id="citySearchInput" class="pinput" placeholder="Or enter city name (e.g., London)" style="max-width: 180px;">
+    <button class="rbtn" onclick="searchCityPrayerTimes()">Search</button>
+  </div>
+  <div class="vcard">
+    <div class="vref">✦ The Command of Prayer</div>
+    <div class="var2">إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</div>
+    <div class="ven">"Indeed, prayer has been decreed upon the believers a decree of specified times." — An-Nisa 4:103</div>
+  </div>
+</div>
 
 </main>
 </div>
@@ -1000,6 +1028,89 @@ async function signOut() {
   await sb.auth.signOut(); clearUser(); toggleUserDrop();
 }
 
+// ======================= PRAYER TIMES (ALADHAN API) =======================
+async function fetchPrayerTimes(lat, lon, cityName = "Your City") {
+  try {
+    const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2&adjustment=0`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.code !== 200) throw new Error("API error");
+    const timings = data.data.timings;
+    const hijri = data.data.date.hijri;
+    const hijriStr = `${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
+
+    // Update sidebar widget
+    document.getElementById("ptCityName").innerText = cityName;
+    document.getElementById("ptWidgetList").innerHTML = `
+      <div class="ptr"><span class="ptn">Fajr</span><span class="ptt">${timings.Fajr}</span></div>
+      <div class="ptr"><span class="ptn">Dhuhr</span><span class="ptt">${timings.Dhuhr}</span></div>
+      <div class="ptr next"><span class="ptn">Asr <span class="pbadge">NEXT</span></span><span class="ptt">${timings.Asr}</span></div>
+      <div class="ptr"><span class="ptn">Maghrib</span><span class="ptt">${timings.Maghrib}</span></div>
+      <div class="ptr"><span class="ptn">Isha</span><span class="ptt">${timings.Isha}</span></div>
+    `;
+
+    // Update main prayer view
+    document.getElementById("prayerCityName").innerText = cityName;
+    document.getElementById("prayerHijri").innerText = hijriStr;
+    const now = new Date();
+    const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2,'0')}`;
+    const prayerOrder = ["Fajr","Sunrise","Dhuhr","Asr","Maghrib","Isha"];
+    let nextPrayer = null;
+    const gridHtml = prayerOrder.map(p => {
+      let time = timings[p];
+      if (!time) return "";
+      let isActive = false;
+      if (!nextPrayer && time > currentTime) { nextPrayer = p; isActive = true; }
+      return `<div class="pti ${isActive ? 'act' : ''}"><div class="ptin">${p}</div><div class="ptit2">${time.split(' ')[0]}</div><div class="ptnl">${time.includes('PM')?'PM':'AM'}</div></div>`;
+    }).join('');
+    document.getElementById("prayerGrid").innerHTML = gridHtml;
+
+    // Update topbar next prayer badge
+    if (nextPrayer) {
+      document.getElementById("nextPrayer").innerHTML = `Next: ${nextPrayer} · ${timings[nextPrayer]}`;
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById("ptWidgetList").innerHTML = `<div class="ptr">⚠️ Could not load prayer times</div>`;
+  }
+}
+
+function getLocationPrayerTimes() {
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const { latitude, longitude } = pos.coords;
+      // Reverse geocode for city name (optional)
+      let city = "Your Location";
+      try {
+        const geo = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`);
+        const geoData = await geo.json();
+        city = geoData.address?.city || geoData.address?.town || geoData.address?.village || "Your Location";
+      } catch(e) {}
+      fetchPrayerTimes(latitude, longitude, city);
+    }, () => {
+      alert("Unable to get location. Using default (Karachi).");
+      fetchPrayerTimes(24.8607, 67.0011, "Karachi");
+    });
+  } else {
+    alert("Geolocation not supported. Using default (Karachi).");
+    fetchPrayerTimes(24.8607, 67.0011, "Karachi");
+  }
+}
+
+async function searchCityPrayerTimes() {
+  const city = document.getElementById("citySearchInput").value.trim();
+  if (!city) return;
+  const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}&limit=1`;
+  const res = await fetch(geoUrl);
+  const data = await res.json();
+  if (data.length === 0) { alert("City not found"); return; }
+  const { lat, lon, display_name } = data[0];
+  fetchPrayerTimes(parseFloat(lat), parseFloat(lon), display_name.split(",")[0]);
+}
+
+// Call on page load (default Karachi)
+fetchPrayerTimes(24.8607, 67.0011, "Karachi");
+  
 // ── USER DROPDOWN ────────────────────────────────────────────────────────────
 function toggleUserDrop() {
   document.getElementById('userDrop').classList.toggle('open');
@@ -1030,9 +1141,15 @@ function showView(v) {
   if (v === 'hadith' && !hadithLoaded) { rndH(); hadithLoaded = true; }
   if (v === 'duas') renderDuas('morning');
   if (v === 'chat') {
-    document.getElementById('vChat').style.display = 'flex';
-    document.getElementById('vChat').classList.remove('hidden');
-  }
+      document.getElementById('vChat').style.display = 'flex';
+      document.getElementById('vChat').classList.remove('hidden');
+      // Reset chat UI
+      document.getElementById('ws').classList.remove('hidden');
+      document.getElementById('msgs').classList.add('hidden');
+      document.getElementById('msgs').innerHTML = '';
+      chatStarted = false;
+      chatHistory = [];
+   }
 }
 
 function setMode(el, m) {
@@ -1302,38 +1419,60 @@ function renderDuas(cat) {
 
 // ── AUDIO QURAN (Premium) ────────────────────────────────────────────────────
 // Uses: https://api.alquran.cloud/v1/surah/{number}/{edition}
+let currentAyahs = [];
+let currentAyahIndex = 0;
+let audioQueue = [];
+
 function playAudio() {
   if (!isPremium) { openPgate(); return; }
-  const reciter = document.getElementById('reciterSel').value;
-  const surah   = document.getElementById('surahSel').value;
-  const sName   = document.getElementById('surahSel').selectedOptions[0].text;
-  const rName   = document.getElementById('reciterSel').selectedOptions[0].text;
-  const url     = `https://api.alquran.cloud/v1/surah/${surah}/${reciter}`;
+  const reciter = document.getElementById("reciterSel").value;
+  const surahNum = document.getElementById("surahSel").value;
+  const sName = document.getElementById("surahSel").selectedOptions[0].text;
+  const rName = document.getElementById("reciterSel").selectedOptions[0].text;
+  const url = `https://api.alquran.cloud/v1/surah/${surahNum}/${reciter}`;
 
-  document.getElementById('audioBar').classList.remove('hidden');
-  document.getElementById('audioTitle').textContent = sName;
-  document.getElementById('audioReciter').textContent = rName;
+  document.getElementById("audioBar").classList.remove("hidden");
+  document.getElementById("audioTitle").textContent = sName;
+  document.getElementById("audioReciter").textContent = rName;
 
   fetch(url)
     .then(r => r.json())
     .then(data => {
-      const ayahs = data.data?.ayahs || [];
-      if (!ayahs.length) return;
-      const el = document.getElementById('audioEl');
-      el.src = ayahs[0].audio;
-      el.play().catch(() => {});
-      document.getElementById('audioPlayBtn').textContent = '⏸';
+      currentAyahs = data.data?.ayahs || [];
+      if (!currentAyahs.length) return;
+      currentAyahIndex = 0;
+      playAyahAtIndex(0);
     })
-    .catch(() => showMsg('Could not load audio. Try again.', 'err'));
+    .catch(() => showMsg("Could not load audio. Try again.", "err"));
 }
 
-function toggleAudio() {
-  const el = document.getElementById('audioEl');
-  const btn = document.getElementById('audioPlayBtn');
-  if (el.paused) { el.play(); btn.textContent = '⏸'; }
-  else { el.pause(); btn.textContent = '▶'; }
+function playAyahAtIndex(idx) {
+  if (idx >= currentAyahs.length) {
+    audioEnded(); // finished surah
+    return;
+  }
+  const audioEl = document.getElementById("audioEl");
+  audioEl.src = currentAyahs[idx].audio;
+  audioEl.play().catch(() => {});
+  document.getElementById("audioPlayBtn").textContent = "⏸";
+  // When this ayah ends, play next
+  audioEl.onended = () => {
+    playAyahAtIndex(idx + 1);
+  };
 }
-function audioEnded() { document.getElementById('audioPlayBtn').textContent = '▶'; }
+
+// Also modify toggleAudio to work with new queue
+function toggleAudio() {
+  const el = document.getElementById("audioEl");
+  const btn = document.getElementById("audioPlayBtn");
+  if (el.paused) { el.play(); btn.textContent = "⏸"; }
+  else { el.pause(); btn.textContent = "▶"; }
+}
+function audioEnded() {
+  document.getElementById("audioPlayBtn").textContent = "▶";
+  currentAyahs = [];
+  currentAyahIndex = 0;
+}
 function updateProgress() {
   const el = document.getElementById('audioEl');
   if (!el.duration) return;
@@ -1384,6 +1523,18 @@ function showMsg(msg, type) {
 
 loadChatCount();
 renderDuas('morning');
+
+// Mobile sidebar toggle
+const menuBtn = document.getElementById("mobileMenuBtn");
+const sidebar = document.querySelector(".sidebar");
+if (menuBtn && sidebar) {
+  menuBtn.onclick = () => sidebar.classList.toggle("open");
+  // Close sidebar when clicking a navigation item
+  document.querySelectorAll(".ni").forEach(item => {
+    item.addEventListener("click", () => sidebar.classList.remove("open"));
+  });
+}
+  
 </script>
 </body>
 </html>
