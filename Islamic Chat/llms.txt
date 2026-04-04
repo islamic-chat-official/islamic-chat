@@ -23,8 +23,8 @@ Islamic Chat is a web application that uses artificial intelligence to answer qu
 - Audio Quran with world-renowned reciters
 
 ## Pricing
-- Free tier: 5 AI conversations per day, full Hadith and Duas access
-- Premium: $4/month — unlimited AI chat, deep Quran tafsir, Audio Quran, personalized learning plan
+- Free tier: 10 AI conversations per day, full Hadith and Duas access
+- Premium: $10/month — unlimited AI chat, deep Quran tafsir, Audio Quran, personalized learning plan
 
 ## Languages
 English (Arabic text displayed for Quran and Hadith)
