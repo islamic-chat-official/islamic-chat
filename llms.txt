@@ -1,0 +1,33 @@
+# Islamic Chat — AI Islamic Companion
+> https://islamicchat.online
+
+Islamic Chat is a free AI-powered Islamic companion for Muslims and non-Muslims worldwide. It provides accurate Islamic guidance rooted in the Quran and authentic Hadith.
+
+## What is Islamic Chat?
+Islamic Chat is a web application that uses artificial intelligence to answer questions about Islam, explain Quran verses with tafsir, search Sahih Bukhari and Sahih Muslim hadith, provide authentic duas and dhikr, and generate personalized Islamic learning plans.
+
+## Who is it for?
+- Practicing Muslims seeking daily Islamic guidance
+- New Muslims learning the fundamentals of Islam
+- Non-Muslims curious about Islamic beliefs and practices
+- Students of Islamic knowledge seeking scholarly explanations
+- Anyone with questions about the Quran, Hadith, prayer, fasting, zakat, or Islamic ethics
+
+## Key Features
+- AI Islamic chat powered by LLaMA 3 (fast, accurate, scholarly)
+- Full Quran with Arabic text, English translation, and AI tafsir
+- Real Hadith database: Sahih Bukhari (7,563 hadith), Sahih Muslim (7,453 hadith), Tirmidhi, Abu Dawud, Ibn Majah
+- Authentic duas and dhikr for morning, evening, before sleep, after prayer, eating, and travelling
+- Prayer times
+- Personalized 30-day Islamic learning plans
+- Audio Quran with world-renowned reciters
+
+## Pricing
+- Free tier: 10 AI conversations per day, full Hadith and Duas access
+- Premium: $10/month — unlimited AI chat, deep Quran tafsir, Audio Quran, personalized learning plan
+
+## Languages
+English (Arabic text displayed for Quran and Hadith)
+
+## Contact
+support@islamicchat.online
