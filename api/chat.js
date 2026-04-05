@@ -6,23 +6,23 @@
 //    GROQ_API_KEY  =  gsk_xxxxxxxxxxxxxxxxxxxx   ← your Groq key
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Vercel Serverless Function – Groq API Proxy
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-const CORS = {
-  "Access-Control-Allow-Origin":  "*",          // ← change to your domain in prod
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Content-Type":                 "application/json",
-};
+export default async function handler(req, res) {
+  // Enable CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-exports.handler = async (event) => {
-  if (event.httpMethod === "OPTIONS") return { statusCode: 200, headers: CORS, body: "" };
-  if (event.httpMethod !== "POST")   return { statusCode: 405, headers: CORS, body: "Method not allowed" };
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    const { messages, isPremium, mode } = JSON.parse(event.body || "{}");
+    const { messages, isPremium, mode } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
-      return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: "Invalid request" }) };
+      return res.status(400).json({ error: "Invalid request" });
     }
 
     // ── SYSTEM PROMPT ──────────────────────────────────────────────────────────
@@ -62,37 +62,25 @@ ${isPremium
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "llama-3.1-8b-instant",
         max_tokens: isPremium ? 2000 : 900,
         temperature: 0.65,
         messages: [
           { role: "system", content: system },
-          ...messages.slice(-12), // last 12 messages for context
+          ...messages.slice(-12),
         ],
       }),
     });
 
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("Groq error:", errText);
-      return {
-        statusCode: 500,
-        headers: CORS,
-        body: JSON.stringify({ error: "AI service unavailable. Please try again." }),
-      };
-    }
+    if (!response.ok) throw new Error("Groq API error");
 
     const data = await response.json();
-    const text = data.choices?.[0]?.message?.content || "Sorry, I could not generate a response. Please try again.";
+    const text = data.choices?.[0]?.message?.content || "Sorry, I could not generate a response.";
 
-    return { statusCode: 200, headers: CORS, body: JSON.stringify({ text }) };
+    return res.status(200).json({ text });
 
   } catch (err) {
     console.error("Function error:", err);
-    return {
-      statusCode: 500,
-      headers: CORS,
-      body: JSON.stringify({ error: "Server error. Please try again." }),
-    };
+    return res.status(500).json({ error: "Server error. Please try again." });
   }
-};
+}
