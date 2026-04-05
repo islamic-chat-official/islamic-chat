@@ -505,97 +505,78 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .hidden{display:none!important;}
 
 /* MOBILE */
+/* ============================================ */
+/* FINAL MOBILE FIX - NO OVERFLOW, ALL VISIBLE  */
+/* ============================================ */
 @media (max-width: 680px) {
-  /* Prevent horizontal scroll */
+  /* PREVENT HORIZONTAL SCROLL */
   html, body {
     overflow-x: hidden !important;
     width: 100% !important;
-    position: relative !important;
+    max-width: 100% !important;
   }
-  
-  /* Main app layout */
-  #app {
-    grid-template-columns: 1fr !important;
-    grid-template-rows: 56px 1fr !important;
+  #app, .main {
     overflow-x: hidden !important;
     width: 100% !important;
   }
   
-  .main {
-    overflow-x: hidden !important;
-    width: 100% !important;
-  }
-  
-  /* ===== TOPBAR - FIX OVERCROWDING ===== */
+  /* ===== TOPBAR - FULLY VISIBLE ===== */
   .topbar {
-    padding: 0 6px !important;
-    gap: 4px !important;
+    display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
-    white-space: nowrap !important;
+    gap: 8px !important;
+    padding: 0 8px !important;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
-  .topbar::-webkit-scrollbar {
-    display: none;
+  .topbar::-webkit-scrollbar { display: none; }
+  
+  .mobile-menu-btn {
+    display: flex !important;
+    background: none !important;
+    border: none !important;
+    font-size: 24px !important;
+    color: var(--gold) !important;
+    flex-shrink: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
   }
   
-  /* Logo */
   .logo {
     flex-shrink: 0 !important;
   }
-  .logo-name {
-    font-size: 12px !important;
-  }
-  .logo-sub {
-    display: none !important;
-  }
-  .logo-mark {
-    width: 26px !important;
-    height: 26px !important;
-    font-size: 13px !important;
-  }
+  .logo-name { font-size: 13px !important; }
+  .logo-sub { display: none !important; }
+  .logo-mark { width: 28px !important; height: 28px !important; font-size: 14px !important; }
   
-  /* Mobile menu button */
-  .mobile-menu-btn {
-    display: block !important;
-    background: none !important;
-    border: none !important;
-    font-size: 22px !important;
-    color: var(--gold) !important;
-    cursor: pointer !important;
-    margin-right: 4px !important;
-    flex-shrink: 0 !important;
-    padding: 4px !important;
-  }
-  
-  /* Topbar center - prayer info */
   .topbar-center {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     gap: 6px !important;
-    margin-left: 0 !important;
+    background: rgba(10,22,16,0.7) !important;
+    padding: 2px 8px !important;
+    border-radius: 20px !important;
     flex-shrink: 0 !important;
   }
   .prayer-badge {
-    padding: 2px 8px !important;
-    font-size: 9px !important;
+    font-size: 10px !important;
+    padding: 2px 6px !important;
     white-space: nowrap !important;
   }
   .hijri {
     display: inline-block !important;
-    font-size: 8px !important;
-    background: rgba(201,168,76,0.1) !important;
+    font-size: 9px !important;
+    background: rgba(201,168,76,0.15) !important;
     padding: 2px 6px !important;
     border-radius: 12px !important;
     white-space: nowrap !important;
-    margin-top: 0 !important;
   }
   
-  /* Topbar right - user area */
   .topbar-right {
     flex-shrink: 0 !important;
+    display: flex !important;
     gap: 4px !important;
   }
   .tbtn {
@@ -603,21 +584,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     font-size: 10px !important;
     white-space: nowrap !important;
   }
-  .tbtn:not(.gold) {
-    display: inline-block !important;
-  }
-  .user-pill {
-    padding: 2px 8px 2px 2px !important;
-  }
-  .uname {
-    max-width: 50px !important;
-    font-size: 10px !important;
-  }
-  .inst-btn.show {
-    display: flex !important;
-    padding: 4px 6px !important;
-    font-size: 9px !important;
-  }
+  .user-pill { padding: 2px 6px 2px 2px !important; }
+  .uname { max-width: 55px !important; font-size: 10px !important; }
   
   /* ===== SIDEBAR - OFF CANVAS ===== */
   .sidebar {
@@ -626,184 +594,96 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     top: 56px !important;
     bottom: 0 !important;
     width: 280px !important;
-    z-index: 200 !important;
+    z-index: 1000 !important;
     transition: left 0.3s ease !important;
     background: var(--bg2) !important;
-    border-right: 1px solid var(--bdr) !important;
-    box-shadow: 2px 0 12px rgba(0,0,0,0.4) !important;
     display: flex !important;
     overflow-y: auto !important;
   }
-  .sidebar.open {
-    left: 0 !important;
-  }
+  .sidebar.open { left: 0 !important; }
   
-  /* ===== WELCOME AREA ===== */
+  /* ===== MAIN CHAT VIEW - ALWAYS SHOW INPUT ===== */
+  #vChat {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    overflow: hidden !important;
+  }
   .welcome {
+    flex: 1 !important;
+    overflow-y: auto !important;
     padding: 16px 12px !important;
   }
-  .bsml {
-    font-size: 20px !important;
-  }
-  .wtitle {
-    font-size: 20px !important;
-    line-height: 1.3 !important;
-  }
-  .wsub {
-    font-size: 10px !important;
-    padding: 0 8px !important;
-  }
-  .sgrid {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-  }
-  .scard {
-    padding: 10px 12px !important;
-  }
-  .stit {
-    font-size: 12px !important;
-  }
-  .sdesc {
-    font-size: 10px !important;
-  }
-  
-  /* ===== CHAT MESSAGES ===== */
   .msgs {
+    flex: 1 !important;
+    overflow-y: auto !important;
     padding: 10px !important;
   }
-  .msg {
-    max-width: 100% !important;
-  }
-  .mbub {
-    max-width: 80% !important;
-    font-size: 12px !important;
-    padding: 8px 10px !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-  }
-  .mav {
-    width: 28px !important;
-    height: 28px !important;
-    font-size: 12px !important;
-  }
-  
-  /* ===== INPUT AREA ===== */
   .iarea {
-    padding: 10px !important;
+    flex-shrink: 0 !important;
+    padding: 8px !important;
+    background: var(--bg) !important;
+    border-top: 1px solid var(--bdr) !important;
   }
   .itabs {
-    gap: 3px !important;
+    display: flex !important;
+    gap: 4px !important;
     overflow-x: auto !important;
     flex-wrap: nowrap !important;
     padding-bottom: 4px !important;
   }
   .itab {
+    font-size: 9px !important;
+    padding: 3px 8px !important;
     white-space: nowrap !important;
-    font-size: 8px !important;
-    padding: 3px 6px !important;
+  }
+  .iwrap {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: flex-end !important;
   }
   .ibox {
-    font-size: 11px !important;
+    font-size: 12px !important;
     padding: 8px 10px !important;
+    flex: 1 !important;
   }
   .sbtn {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 13px !important;
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 14px !important;
   }
   .disc {
     font-size: 9px !important;
   }
   
-  /* ===== PANELS (Quran, Hadith, Duas, Prayer) ===== */
-  .panel {
-    padding: 12px !important;
-    overflow-x: hidden !important;
-  }
-  .ptitle {
-    font-size: 20px !important;
-  }
-  .psub {
-    font-size: 10px !important;
-  }
-  .prow {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 8px !important;
-  }
-  .psel, .pinput, .pbtn, .rbtn {
-    width: 100% !important;
-    font-size: 12px !important;
-  }
+  /* ===== WELCOME CARDS ===== */
+  .wtitle { font-size: 22px !important; }
+  .wsub { font-size: 11px !important; }
+  .sgrid { grid-template-columns: 1fr !important; gap: 8px !important; }
+  .scard { padding: 10px 12px !important; }
   
-  /* ===== PRAYER TIMES ===== */
-  .ptfc {
-    padding: 12px !important;
-  }
-  .ptg {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 6px !important;
-  }
-  .pti {
-    padding: 8px 4px !important;
-  }
-  .ptit2 {
-    font-size: 16px !important;
-  }
-  .ptin {
-    font-size: 9px !important;
-  }
+  /* ===== OTHER PANELS ===== */
+  .panel { padding: 12px !important; }
+  .ptitle { font-size: 20px !important; }
+  .prow { flex-direction: column !important; gap: 8px !important; }
+  .psel, .pinput, .pbtn, .rbtn { width: 100% !important; }
+  
+  /* ===== PRAYER TIMES GRID ===== */
+  .ptg { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+  .pti { padding: 8px 4px !important; }
+  .ptit2 { font-size: 14px !important; }
   
   /* ===== DUAS ===== */
-  .dcats {
-    overflow-x: auto !important;
-    flex-wrap: nowrap !important;
-    padding-bottom: 6px !important;
-    gap: 4px !important;
-  }
-  .dcat {
-    white-space: nowrap !important;
-    font-size: 9px !important;
-    padding: 4px 8px !important;
-  }
-  .dc {
-    padding: 12px !important;
-  }
-  .dar {
-    font-size: 15px !important;
-    line-height: 1.6 !important;
-  }
-  .dtra, .dmn {
-    font-size: 10px !important;
-  }
-  
-  /* ===== SIDEBAR WIDGETS ===== */
-  .dua-w {
-    margin: 8px !important;
-  }
-  .dua-war {
-    font-size: 12px !important;
-  }
-  .pt-w {
-    margin: 8px !important;
-  }
-  .up-banner {
-    margin: 8px !important;
-  }
+  .dcats { overflow-x: auto !important; flex-wrap: nowrap !important; gap: 4px !important; }
+  .dcat { white-space: nowrap !important; font-size: 9px !important; padding: 4px 8px !important; }
+  .dc { padding: 12px !important; }
+  .dar { font-size: 16px !important; }
   
   /* ===== MODALS ===== */
   .pgate, .auth-box {
+    width: calc(100% - 24px) !important;
+    margin: 0 12px !important;
     padding: 20px 16px !important;
-    width: calc(100% - 32px) !important;
-    margin: 0 16px !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important;
-  }
-  .pgate h2 {
-    font-size: 20px !important;
-  }
-  .pgate-feature {
-    font-size: 11px !important;
   }
   
   /* ===== CARDS & CONTAINERS ===== */
@@ -1947,14 +1827,32 @@ function showMsg(msg, type) {
 loadChatCount();
 // Duas are now loaded via loadDuas() in DOMContentLoaded
 
-// Mobile sidebar toggle
+// Mobile sidebar toggle - FINAL FIX
 const menuBtn = document.getElementById("mobileMenuBtn");
 const sidebar = document.querySelector(".sidebar");
 if (menuBtn && sidebar) {
-  menuBtn.onclick = () => sidebar.classList.toggle("open");
-  // Close sidebar when clicking a navigation item
+  // Remove existing listeners to avoid duplicates
+  const newBtn = menuBtn.cloneNode(true);
+  menuBtn.parentNode.replaceChild(newBtn, menuBtn);
+  const finalBtn = document.getElementById("mobileMenuBtn");
+  
+  finalBtn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    sidebar.classList.toggle("open");
+  });
+  
+  // Close sidebar when clicking a nav item
   document.querySelectorAll(".ni").forEach(item => {
     item.addEventListener("click", () => sidebar.classList.remove("open"));
+  });
+  
+  // Close when clicking outside
+  document.addEventListener("click", function(e) {
+    if (sidebar.classList.contains("open") && 
+        !sidebar.contains(e.target) && 
+        e.target !== finalBtn) {
+      sidebar.classList.remove("open");
+    }
   });
 }
   
