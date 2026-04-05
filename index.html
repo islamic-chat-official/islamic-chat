@@ -572,10 +572,10 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     <div class="ni"        id="n-prayer"  onclick="setNav(this,'prayer')"><span class="ni-icon">🕐</span><span>Prayer Times</span></div>
   </nav>
   <div class="sdiv"></div>
-  <div class="dua-w">
+  <div class="dua-w" id="dailyDuaWidget">
     <div class="dua-wl">✦ Dua of the Day</div>
-    <div class="dua-war">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً</div>
-    <div class="dua-wtr">"Our Lord, give us good in this world and good in the Hereafter." — Al-Baqarah 2:201</div>
+    <div class="dua-war" id="dailyDuaArabic">Loading...</div>
+    <div class="dua-wtr" id="dailyDuaTranslation">Loading authentic Duas from Dawat Ul Muslimeen...</div>
   </div>
   <div class="pt-w" id="ptWidget">
   <div class="pt-wl">🕐 Prayer Times · <span id="ptCityName">Karachi</span></div>
@@ -689,19 +689,38 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
   <!-- ── DUAS VIEW (Free) ── -->
   <div id="vDuas" class="hidden panel">
-    <div class="ptitle">🤲 Duas & Dhikr</div>
-    <div class="psub">Authentic supplications for every moment of your day — with Arabic, transliteration, and meaning</div>
-    <div class="dcats">
-      <button class="dcat active" onclick="setDcat(this,'morning')">Morning</button>
-      <button class="dcat" onclick="setDcat(this,'evening')">Evening</button>
-      <button class="dcat" onclick="setDcat(this,'sleep')">Before Sleep</button>
-      <button class="dcat" onclick="setDcat(this,'prayer')">After Prayer</button>
-      <button class="dcat" onclick="setDcat(this,'eating')">Eating</button>
-      <button class="dcat" onclick="setDcat(this,'travel')">Travelling</button>
-      <button class="dcat" onclick="setDcat(this,'stress')">Anxiety & Stress</button>
+  <div class="ptitle">🤲 Duas & Dhikr</div>
+  <div class="psub">Authentic supplications from Dawat Ul Muslimeen — with Arabic, transliteration, and Hadith references</div>
+  
+  <!-- PDF Purchase Banner -->
+  <div class="premium-pdf-banner" style="background: linear-gradient(135deg, rgba(201,168,76,.1), rgba(201,168,76,.03)); border: 1px solid var(--gold-border); border-radius: 12px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <span style="font-size: 14px; font-weight: 600; color: var(--gold);">📚 Get the Complete Collection</span>
+      <p style="font-size: 11px; color: var(--muted); margin-top: 4px;">200+ authentic Duas with full Hadith references, printable PDF</p>
     </div>
-    <div id="dc"></div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button class="pbtn" onclick="buyPDF('vol1')" style="background: var(--gold); color: #000; cursor: pointer;">Vol 1 - $19</button>
+      <button class="pbtn" onclick="buyPDF('vol2')" style="background: var(--gold); color: #000; cursor: pointer;">Vol 2 - $29</button>
+      <button class="up-btn" onclick="buyPDF('bundle')" style="background: linear-gradient(135deg, var(--gold), #a07830); cursor: pointer;">Bundle - $39</button>
+    </div>
   </div>
+  
+  <div class="dcats">
+    <button class="dcat active" onclick="setDcat(this,'morning')">Morning</button>
+    <button class="dcat" onclick="setDcat(this,'evening')">Evening</button>
+    <button class="dcat" onclick="setDcat(this,'sleep')">Before Sleep</button>
+    <button class="dcat" onclick="setDcat(this,'prayer')">After Prayer</button>
+    <button class="dcat" onclick="setDcat(this,'eating')">Eating</button>
+    <button class="dcat" onclick="setDcat(this,'travel')">Travelling</button>
+    <button class="dcat" onclick="setDcat(this,'stress')">Anxiety & Stress</button>
+    <button class="dcat" onclick="setDcat(this,'funeral')">Funeral</button>
+    <button class="dcat" onclick="setDcat(this,'entering_exiting_home')">Home</button>
+    <button class="dcat" onclick="setDcat(this,'mosque')">Mosque</button>
+    <button class="dcat" onclick="setDcat(this,'wudu')">Wudu</button>
+    <button class="dcat" onclick="setDcat(this,'quran')">Quran</button>
+  </div>
+  <div id="dc"></div>
+</div>
 
   <!-- ── AUDIO QURAN (Premium) ── -->
   <div id="vAudio" class="hidden panel">
@@ -889,13 +908,16 @@ function installPWA() {
 window.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (session?.user) await setUser(session.user);
-  renderDuas('morning');
+  
+  // Load authentic Duas from JSON
+  await loadDuas();
+  
+  // Initialize Hadith
   if (!hadithLoaded) { rndH(); hadithLoaded = true; }
 
   // Check return from Freemius payment
   const params = new URLSearchParams(window.location.search);
   if (params.get('payment') === 'success') {
-    // Show confirmation — premium will be flipped via webhook
     showMsg('🎉 Payment received! Your Premium access will activate within a few minutes.', 'ok');
     window.history.replaceState({}, '', window.location.pathname);
   }
@@ -1377,44 +1399,96 @@ async function aiHadith() {
 }
 
 // ── DUAS DATA ────────────────────────────────────────────────────────────────
-const DUAS = {
-  morning:[
-    {t:'Upon Waking',a:'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ',tr:"Alhamdulillahil-lathee ahyana ba'da ma amatana wa ilayhin-nushoor",m:'"All praise is for Allah who gave us life after taking it from us." — Sahih Bukhari'},
-    {t:'Morning Protection',a:'اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ',tr:"Allahumma bika asbahna wa bika amsayna wa bika nahya wa bika namootu wa ilaykan-nushoor",m:'"O Allah, by Your leave we have reached the morning..." — Abu Dawud'},
-    {t:'Sayyidul Istighfar (Best Forgiveness Dua)',a:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ',tr:"Allahumma anta rabbi la ilaha illa anta khalaqtani wa ana abduk",m:'"O Allah, You are my Lord. There is none worthy of worship but You. You created me and I am Your slave." — Sahih Bukhari'}
-  ],
-  evening:[
-    {t:'Evening Remembrance',a:'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ',tr:"Amsayna wa amsal-mulku lillahi wal-hamdu lillah",m:'"We have entered the evening and at this time all sovereignty belongs to Allah." — Abu Dawud'},
-    {t:'Evening Protection (3×)',a:'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ',tr:"Bismillahil-lathee la yadurru ma'as-mihi shay'un fil-ardi wa la fis-sama'i",m:'"In the name of Allah with whose name nothing can cause harm." — Recite 3× each morning & evening, Ibn Majah'}
-  ],
-  sleep:[
-    {t:'Before Sleeping',a:'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',tr:"Bismika Allahumma amootu wa ahya",m:'"In Your name O Allah, I die and I live." — Sahih Bukhari'},
-    {t:'Ayatul Kursi Before Sleep',a:'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ',tr:"Allahu la ilaha illa huwal hayyul qayyoom...",m:'Allah appoints an angel to protect you until morning. — Sahih Bukhari'}
-  ],
-  prayer:[
-    {t:'After Every Salah',a:'سُبْحَانَ اللَّهِ ٣٣ · الْحَمْدُ لِلَّهِ ٣٣ · اللَّهُ أَكْبَرُ ٣٤',tr:"Subhanallah (33×) · Alhamdulillah (33×) · Allahu Akbar (34×)",m:'Sins forgiven even if like the foam of the sea. — Sahih Muslim'},
-    {t:'Dua After Salah',a:'اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ',tr:"Allahumma a'inni ala dhikrika wa shukrika wa husni ibadatik",m:'"O Allah, help me to remember You, thank You, and worship You in the best manner." — Abu Dawud'}
-  ],
-  eating:[
-    {t:'Before Eating',a:'بِسْمِ اللَّهِ',tr:"Bismillah",m:'"In the name of Allah." If you forget, say it when you remember. — Abu Dawud'},
-    {t:'After Eating',a:'الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مِنَ الْمُسْلِمِينَ',tr:"Alhamdulillahil-lathee at'amana wa saqana wa ja'alana minal-muslimeen",m:'"All praise for Allah who gave us food and drink and made us Muslims." — Tirmidhi'}
-  ],
-  travel:[
-    {t:'When Boarding a Vehicle',a:'سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَىٰ رَبِّنَا لَمُنْقَلِبُونَ',tr:"Subhanal-lathee sakhkhara lana hatha wa ma kunna lahu muqrineen...",m:'"Glory be to Him Who has subjugated this for us..." — Abu Dawud'}
-  ],
-  stress:[
-    {t:'For Anxiety & Worry',a:'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ',tr:"Hasbunallahu wa ni'mal wakeel",m:'"Allah is sufficient for us and He is the best disposer of affairs." — Al-Baqarah 3:173 (said by Ibrahim AS in hardship)'},
-    {t:'The Dua of Yunus (Jonah)',a:'لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ',tr:"La ilaha illa anta subhanaka inni kuntu minaz-zalimeen",m:'"There is no god but You. Glory be to You. Indeed I have been of the wrongdoers." — Al-Anbiya 21:87. The Prophet ﷺ said: no Muslim says this in any distress except Allah relieves it. — Tirmidhi'}
-  ]
+
+// ============================================================
+// AUTHENTIC DUAS FROM DAWAT UL MUSLIMEEN PDFs
+// ============================================================
+let AUTHENTIC_DUAS = {};
+
+async function loadDuas() {
+  try {
+    const response = await fetch('/data/duas-complete.json');
+    if (!response.ok) throw new Error('Failed to load duas');
+    const data = await response.json();
+    AUTHENTIC_DUAS = data.categories;
+    console.log('✓ Duas loaded successfully from Dawat Ul Muslimeen');
+    // Update daily Dua after loading
+    updateDailyDua();
+    // Render default category
+    renderDuas('morning');
+  } catch (error) {
+    console.error('Failed to load Duas:', error);
+    document.getElementById('dc').innerHTML = '<div class="errmsg">Unable to load Duas. Please refresh the page.</div>';
+  }
+}
+
+function renderDuas(cat) {
+  const category = AUTHENTIC_DUAS[cat];
+  const container = document.getElementById('dc');
+  
+  if (!category || !category.duas || category.duas.length === 0) {
+    container.innerHTML = '<div class="errmsg">No duas found in this category. Please check back later.</div>';
+    return;
+  }
+  
+  container.innerHTML = category.duas.map(dua => `
+    <div class="dc">
+      <div class="dct">✦ ${dua.title}</div>
+      <div class="dar">${dua.arabic}</div>
+      <div class="dtra">${dua.transliteration}</div>
+      <div class="dmn">${dua.translation}</div>
+      <div class="vtaf" style="margin-top: 8px; font-size: 10px; color: var(--gold);">
+        📚 ${dua.source_book || dua.reference} · ${dua.grade}
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateDailyDua() {
+  // Collect all duas from all categories
+  const allDuas = [];
+  for (const cat in AUTHENTIC_DUAS) {
+    if (AUTHENTIC_DUAS[cat] && AUTHENTIC_DUAS[cat].duas) {
+      allDuas.push(...AUTHENTIC_DUAS[cat].duas);
+    }
+  }
+  
+  if (allDuas.length === 0) return;
+  
+  // Use date to select a different Dua each day
+  const today = new Date();
+  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+  const duaIndex = dayOfYear % allDuas.length;
+  const dua = allDuas[duaIndex];
+  
+  const dailyDuaArabic = document.getElementById('dailyDuaArabic');
+  const dailyDuaTranslation = document.getElementById('dailyDuaTranslation');
+  if (dailyDuaArabic && dailyDuaTranslation) {
+    dailyDuaArabic.innerHTML = dua.arabic;
+    dailyDuaTranslation.innerHTML = `"${dua.translation}" — ${dua.source_book || dua.reference}`;
+  }
+}
+
+// Share Repid Connect Product URLs (UPDATE THESE WITH YOUR ACTUAL LINKS)
+const SHARE_REPID_URLS = {
+  vol1: 'https://sharerepidconnect.com/product/dawat-ul-muslimeen-vol1',
+  vol2: 'https://sharerepidconnect.com/product/dawat-ul-muslimeen-vol2',
+  bundle: 'https://sharerepidconnect.com/product/dawat-ul-muslimeen-bundle'
 };
+
+function buyPDF(volume) {
+  const url = SHARE_REPID_URLS[volume];
+  if (url) {
+    window.open(url, '_blank');
+  } else {
+    alert('Product URL not configured. Please contact support.');
+  }
+}
 
 function setDcat(el, cat) {
   document.querySelectorAll('.dcat').forEach(b => b.classList.remove('active'));
-  el.classList.add('active'); renderDuas(cat);
-}
-function renderDuas(cat) {
-  document.getElementById('dc').innerHTML = (DUAS[cat]||DUAS.morning).map(d => `
-    <div class="dc"><div class="dct">✦ ${d.t}</div><div class="dar">${d.a}</div><div class="dtra">${d.tr}</div><div class="dmn">${d.m}</div></div>`).join('');
+  el.classList.add('active');
+  renderDuas(cat);
 }
 
 // ── AUDIO QURAN (Premium) ────────────────────────────────────────────────────
@@ -1522,7 +1596,7 @@ function showMsg(msg, type) {
 }
 
 loadChatCount();
-renderDuas('morning');
+// Duas are now loaded via loadDuas() in DOMContentLoaded
 
 // Mobile sidebar toggle
 const menuBtn = document.getElementById("mobileMenuBtn");
