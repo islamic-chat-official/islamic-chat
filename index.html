@@ -836,7 +836,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     2. Set price to $10/month recurring
     3. Get your checkout URL: https://checkout.freemius.com/mode/dialog/plugin/YOUR_PLUGIN_ID/plan/YOUR_PLAN_ID/
     4. Replace the href below with your Freemius checkout URL
-    5. Set webhook URL in Freemius: https://your-site.netlify.app/api/freemius-webhook
+    5. Set webhook URL in Freemius: https://your-site.vercel.app/api/freemius-webhook
     -->
     <button class="pgate-cta" onclick="goToFreemius()">
       Get Premium — $10/month →
@@ -854,7 +854,7 @@ const CONFIG = {
   SUPABASE_URL:     'https://ioxbkfvqkcsmptjkkxvs.supabase.co',      // ← your Supabase URL
   SUPABASE_ANON:    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlveGJrZnZxa2NzbXB0amtreHZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNDM4MzQsImV4cCI6MjA5MDgxOTgzNH0.I8e_jDFOdAsrmN7vhBAYg1Edw8uR0ThbMjHtlSPSa1w',    // ← your Supabase anon key
   FREEMIUS_URL:     'https://checkout.freemius.com/product/27119/plan/44927/', // ← your Freemius checkout URL
-  API_URL:          '/.netlify/functions/chat',              // Netlify function (no change needed)
+  API_URL:          '/api/chat',              // vercel function (no change needed)
   FREE_DAILY_LIMIT: 10,                                       // free chats per day
 };
 // ══════════════════════════════════════════════════════════════════════════════
