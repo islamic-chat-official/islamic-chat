@@ -505,219 +505,335 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 /* MOBILE */
 @media (max-width: 680px) {
-  /* Main layout */
+  /* Prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  /* Main app layout */
   #app {
-    grid-template-columns: 1fr;
-    grid-template-rows: 56px 1fr;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 56px 1fr !important;
+    overflow-x: hidden !important;
+    width: 100% !important;
   }
   
-  /* Sidebar - off-canvas (hidden by default, slides in) */
-  .sidebar {
-    position: fixed;
-    left: -280px;
-    top: 56px;
-    bottom: 0;
-    width: 280px;
-    z-index: 200;
-    transition: left 0.3s ease;
-    background: var(--bg2);
-    border-right: 1px solid var(--bdr);
-    box-shadow: 2px 0 12px rgba(0,0,0,0.4);
-    display: flex !important;
-    overflow-y: auto;
-  }
-  .sidebar.open {
-    left: 0;
-  }
-  
-  /* Main content - full width */
   .main {
-    margin-left: 0;
-    width: 100%;
+    overflow-x: hidden !important;
+    width: 100% !important;
   }
   
-  /* Topbar adjustments - SHOW prayer info (don't hide) */
+  /* ===== TOPBAR - FIX OVERCROWDING ===== */
   .topbar {
-    padding: 0 8px;
+    padding: 0 6px !important;
+    gap: 4px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .topbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Logo */
+  .logo {
+    flex-shrink: 0 !important;
   }
   .logo-name {
-    font-size: 14px;
+    font-size: 12px !important;
   }
   .logo-sub {
-    display: none;
+    display: none !important;
   }
+  .logo-mark {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 13px !important;
+  }
+  
+  /* Mobile menu button */
+  .mobile-menu-btn {
+    display: block !important;
+    background: none !important;
+    border: none !important;
+    font-size: 22px !important;
+    color: var(--gold) !important;
+    cursor: pointer !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+    padding: 4px !important;
+  }
+  
+  /* Topbar center - prayer info */
   .topbar-center {
     display: flex !important;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-    margin-left: 4px;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-left: 0 !important;
+    flex-shrink: 0 !important;
   }
   .prayer-badge {
-    padding: 2px 6px;
-    font-size: 9px;
-    gap: 3px;
+    padding: 2px 8px !important;
+    font-size: 9px !important;
+    white-space: nowrap !important;
   }
   .hijri {
-    display: block !important;
-    font-size: 8px;
-    margin-top: -2px;
+    display: inline-block !important;
+    font-size: 8px !important;
+    background: rgba(201,168,76,0.1) !important;
+    padding: 2px 6px !important;
+    border-radius: 12px !important;
+    white-space: nowrap !important;
+    margin-top: 0 !important;
   }
   
-  /* Hide secondary buttons on very small screens */
+  /* Topbar right - user area */
+  .topbar-right {
+    flex-shrink: 0 !important;
+    gap: 4px !important;
+  }
+  .tbtn {
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+    white-space: nowrap !important;
+  }
   .tbtn:not(.gold) {
-    display: none;
+    display: inline-block !important;
   }
-  .user-pill .uname {
-    max-width: 45px;
-    font-size: 10px;
+  .user-pill {
+    padding: 2px 8px 2px 2px !important;
+  }
+  .uname {
+    max-width: 50px !important;
+    font-size: 10px !important;
+  }
+  .inst-btn.show {
+    display: flex !important;
+    padding: 4px 6px !important;
+    font-size: 9px !important;
   }
   
-  /* Welcome area */
+  /* ===== SIDEBAR - OFF CANVAS ===== */
+  .sidebar {
+    position: fixed !important;
+    left: -280px !important;
+    top: 56px !important;
+    bottom: 0 !important;
+    width: 280px !important;
+    z-index: 200 !important;
+    transition: left 0.3s ease !important;
+    background: var(--bg2) !important;
+    border-right: 1px solid var(--bdr) !important;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.4) !important;
+    display: flex !important;
+    overflow-y: auto !important;
+  }
+  .sidebar.open {
+    left: 0 !important;
+  }
+  
+  /* ===== WELCOME AREA ===== */
   .welcome {
-    padding: 16px 12px;
+    padding: 16px 12px !important;
   }
   .bsml {
-    font-size: 20px;
+    font-size: 20px !important;
   }
   .wtitle {
-    font-size: 22px;
+    font-size: 20px !important;
+    line-height: 1.3 !important;
   }
   .wsub {
-    font-size: 11px;
-    padding: 0 4px;
+    font-size: 10px !important;
+    padding: 0 8px !important;
   }
   .sgrid {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
   }
   .scard {
-    padding: 10px 12px;
+    padding: 10px 12px !important;
+  }
+  .stit {
+    font-size: 12px !important;
+  }
+  .sdesc {
+    font-size: 10px !important;
   }
   
-  /* Chat messages */
+  /* ===== CHAT MESSAGES ===== */
   .msgs {
-    padding: 10px;
+    padding: 10px !important;
+  }
+  .msg {
+    max-width: 100% !important;
   }
   .mbub {
-    max-width: 85%;
-    font-size: 12px;
-    padding: 8px 10px;
+    max-width: 80% !important;
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  .mav {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
   }
   
-  /* Input area */
+  /* ===== INPUT AREA ===== */
   .iarea {
-    padding: 10px;
+    padding: 10px !important;
   }
   .itabs {
-    gap: 4px;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 4px;
+    gap: 3px !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 4px !important;
   }
   .itab {
-    white-space: nowrap;
-    font-size: 9px;
-    padding: 3px 8px;
+    white-space: nowrap !important;
+    font-size: 8px !important;
+    padding: 3px 6px !important;
   }
   .ibox {
-    font-size: 12px;
-    padding: 8px 10px;
+    font-size: 11px !important;
+    padding: 8px 10px !important;
   }
   .sbtn {
-    width: 38px;
-    height: 38px;
-    font-size: 14px;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 13px !important;
+  }
+  .disc {
+    font-size: 9px !important;
   }
   
-  /* Prayer times view */
-  .ptfc {
-    padding: 12px;
-  }
-  .ptg {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
-  .pti {
-    padding: 8px 4px;
-  }
-  .ptit2 {
-    font-size: 14px;
-  }
-  
-  /* Quran, Hadith, Duas panels */
+  /* ===== PANELS (Quran, Hadith, Duas, Prayer) ===== */
   .panel {
-    padding: 12px;
+    padding: 12px !important;
+    overflow-x: hidden !important;
   }
   .ptitle {
-    font-size: 20px;
+    font-size: 20px !important;
+  }
+  .psub {
+    font-size: 10px !important;
   }
   .prow {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
   }
   .psel, .pinput, .pbtn, .rbtn {
-    width: 100%;
+    width: 100% !important;
+    font-size: 12px !important;
   }
   
-  /* Dua categories - scrollable horizontally */
+  /* ===== PRAYER TIMES ===== */
+  .ptfc {
+    padding: 12px !important;
+  }
+  .ptg {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+  .pti {
+    padding: 8px 4px !important;
+  }
+  .ptit2 {
+    font-size: 16px !important;
+  }
+  .ptin {
+    font-size: 9px !important;
+  }
+  
+  /* ===== DUAS ===== */
   .dcats {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 6px;
-    gap: 4px;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 6px !important;
+    gap: 4px !important;
   }
   .dcat {
-    white-space: nowrap;
-    font-size: 9px;
-    padding: 4px 8px;
+    white-space: nowrap !important;
+    font-size: 9px !important;
+    padding: 4px 8px !important;
   }
-  
-  /* Dua cards */
   .dc {
-    padding: 12px;
+    padding: 12px !important;
   }
   .dar {
-    font-size: 16px;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
   }
   .dtra, .dmn {
-    font-size: 10px;
+    font-size: 10px !important;
   }
   
-  /* Sidebar widgets */
+  /* ===== SIDEBAR WIDGETS ===== */
   .dua-w {
-    margin: 8px;
+    margin: 8px !important;
   }
   .dua-war {
-    font-size: 12px;
+    font-size: 12px !important;
   }
   .pt-w {
-    margin: 8px;
+    margin: 8px !important;
   }
-  
-  /* Premium banner */
   .up-banner {
-    margin: 8px;
+    margin: 8px !important;
   }
   
-  /* Modals */
+  /* ===== MODALS ===== */
   .pgate, .auth-box {
-    padding: 20px 16px;
-    width: calc(100% - 24px);
-    margin: 0 12px;
+    padding: 20px 16px !important;
+    width: calc(100% - 32px) !important;
+    margin: 0 16px !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
   }
   .pgate h2 {
-    font-size: 20px;
+    font-size: 20px !important;
+  }
+  .pgate-feature {
+    font-size: 11px !important;
   }
   
-  /* PDF banner in Duas section */
+  /* ===== CARDS & CONTAINERS ===== */
+  .vcard {
+    padding: 14px !important;
+  }
+  .var2 {
+    font-size: 16px !important;
+  }
+  .ven {
+    font-size: 11px !important;
+  }
+  .vtaf {
+    font-size: 10px !important;
+  }
+  
+  /* ===== PDF BANNER ===== */
   .premium-pdf-banner {
-    flex-direction: column;
-    text-align: center;
+    flex-direction: column !important;
+    text-align: center !important;
   }
   .premium-pdf-banner button {
-    width: 100%;
+    width: 100% !important;
+  }
+  
+  /* ===== LIMIT BAR ===== */
+  .limit-bar {
+    flex-direction: column !important;
+    gap: 8px !important;
+    text-align: center !important;
+    padding: 8px 12px !important;
   }
 }
 </style>
@@ -730,7 +846,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 <!-- ══ TOPBAR ══ -->
 <header class="topbar">
-  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu" style="display: none; background: none; border: none; font-size: 22px; color: var(--gold); cursor: pointer; margin-right: 4px; flex-shrink: 0;">☰</button>
   <a class="logo" href="#">
     <div class="logo-mark">🕌</div>
     <div><div class="logo-name">Islamic Chat</div><div class="logo-sub">AI Islamic Companion</div></div>
