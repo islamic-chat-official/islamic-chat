@@ -818,7 +818,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 <!-- ══ TOPBAR ══ -->
 <header class="topbar">
-  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu" style="display: none; background: none; border: none; font-size: 22px; color: var(--gold); cursor: pointer; margin-right: 4px; flex-shrink: 0;">☰</button>
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu" style="background: none; border: none; font-size: 24px; color: var(--gold); cursor: pointer; margin-right: 4px; flex-shrink: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">☰</button>
   <a class="logo" href="#">
     <div class="logo-mark">🕌</div>
     <div><div class="logo-name">Islamic Chat</div><div class="logo-sub">AI Islamic Companion</div></div>
@@ -1920,50 +1920,136 @@ loadChatCount();
 
 // ===== FINAL MOBILE SIDEBAR & NAVIGATION =====
 (function() {
+  // Ensure mobile menu button is ALWAYS visible on mobile
   const menuBtn = document.getElementById('mobileMenuBtn');
   const sidebar = document.querySelector('.sidebar');
-  if (!menuBtn || !sidebar) return;
-
-  // Remove any existing listeners to avoid duplicates
+  
+  if (menuBtn) {
+    // REMOVE inline display:none (the biggest bug)
+    menuBtn.style.display = '';
+    // Force visibility
+    menuBtn.style.cssText = 'display: flex !important; background: none; border: none; font-size: 24px; color: var(--gold); cursor: pointer; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0;';
+  }
+  
+  if (!sidebar) return;
+  
+  // Remove any existing listeners to avoid conflicts
   const newBtn = menuBtn.cloneNode(true);
-  menuBtn.parentNode.replaceChild(newBtn, menuBtn);
+  if (menuBtn && menuBtn.parentNode) {
+    menuBtn.parentNode.replaceChild(newBtn, menuBtn);
+  }
   const finalBtn = document.getElementById('mobileMenuBtn');
-
-  // Toggle sidebar on click
-  finalBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    sidebar.classList.toggle('open');
-  });
-
-  // Close sidebar when clicking outside
-  document.addEventListener('click', function(e) {
-    if (sidebar.classList.contains('open') && 
-        !sidebar.contains(e.target) && 
-        e.target !== finalBtn) {
-      sidebar.classList.remove('open');
-    }
-  });
-
-  // Make all navigation items work
-  function initNavClicks() {
-    document.querySelectorAll('.ni').forEach(item => {
-      item.removeEventListener('click', item._navClick);
-      item._navClick = function(e) {
-        e.stopPropagation();
-        let viewId = this.id;
-        if (viewId && viewId.startsWith('n-')) {
-          let view = viewId.substring(2);
-          if (typeof setNav === 'function') {
-            setNav(this, view);
-          }
-        }
-        sidebar.classList.remove('open');
-      };
-      item.addEventListener('click', item._navClick);
+  
+  if (finalBtn) {
+    // Toggle sidebar
+    finalBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      sidebar.classList.toggle('open');
     });
   }
+  
+  // Close sidebar when clicking outside
+  document.addEventListener('click', function(e) {
+    if (sidebar && sidebar.classList && sidebar.classList.contains('open')) {
+      const isClickInside = sidebar.contains(e.target);
+      const isClickOnBtn = finalBtn && finalBtn.contains(e.target);
+      if (!isClickInside && !isClickOnBtn) {
+        sidebar.classList.remove('open');
+      }
+    }
+  });
+  
+  // FIX: Make ALL navigation items work on mobile + desktop
+  function attachNavListeners() {
+    const navItems = document.querySelectorAll('.ni');
+    navItems.forEach(item => {
+      // Remove old listener to prevent duplicates
+      const oldClick = item._navClickHandler;
+      if (oldClick) item.removeEventListener('click', oldClick);
+      
+      const handler = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const viewId = this.id;
+        if (viewId && viewId.startsWith('n-')) {
+          let view = viewId.substring(2);
+          // Call the existing setNav function
+          if (typeof setNav === 'function') {
+            setNav(this, view);
+          } else {
+            // Fallback: manually update
+            console.warn('setNav not found, using manual update');
+            document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+            this.classList.add('active');
+            showView(view);
+          }
+        }
+        
+        // Close sidebar on mobile after click
+        if (sidebar && sidebar.classList) {
+          sidebar.classList.remove('open');
+        }
+      };
+      
+      item.addEventListener('click', handler);
+      item._navClickHandler = handler;
+    });
+  }
+  
+  // Run on load and after any potential DOM changes
+  attachNavListeners();
+  
+  // Also attach to New Conversation button
+  const ncbBtn = document.querySelector('.ncb');
+  if (ncbBtn) {
+    ncbBtn.addEventListener('click', function() {
+      if (sidebar && sidebar.classList) sidebar.classList.remove('open');
+    });
+  }
+})();
 
-  initNavClicks();
+// Also fix CSS: ensure mobile-menu-btn is ALWAYS visible on mobile
+// Add this dynamic style to override any inline issues
+(function fixMobileStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    @media (max-width: 680px) {
+      .mobile-menu-btn {
+        display: flex !important;
+        background: none !important;
+        border: none !important;
+        font-size: 24px !important;
+        color: var(--gold) !important;
+        width: 36px !important;
+        height: 36px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        flex-shrink: 0 !important;
+        margin-right: 4px !important;
+      }
+      .sidebar {
+        position: fixed !important;
+        left: -280px !important;
+        top: 56px !important;
+        bottom: 0 !important;
+        width: 270px !important;
+        z-index: 1000 !important;
+        transition: left 0.25s ease !important;
+        background: var(--bg2) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        box-shadow: 2px 0 12px rgba(0,0,0,0.3) !important;
+      }
+      .sidebar.open {
+        left: 0 !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
 })();
   
 </script>
