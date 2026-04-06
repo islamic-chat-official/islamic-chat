@@ -520,41 +520,55 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     overflow-x: hidden !important;
   }
 
-  /* ----- TOPBAR - WRAP, NO SCROLLBAR ----- */
+  /* ----- TOPBAR - GRID LAYOUT (FORCES ALL ELEMENTS VISIBLE) ----- */
   .topbar {
-    display: flex !important;
-    flex-wrap: wrap !important;
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    align-items: center !important;
     gap: 6px !important;
-    padding: 4px 8px !important;
-    overflow-x: visible !important;
+    padding: 6px 8px !important;
     background: rgba(6, 14, 10, 0.95) !important;
     backdrop-filter: blur(8px) !important;
     border-bottom: 1px solid var(--bdr) !important;
   }
+  
+  /* Hamburger menu - FORCED VISIBLE */
   .mobile-menu-btn {
     display: flex !important;
     background: none !important;
     border: none !important;
-    font-size: 22px !important;
+    font-size: 24px !important;
     color: var(--gold) !important;
+    width: 36px !important;
+    height: 36px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
     flex-shrink: 0 !important;
-    width: 32px !important;
-    height: 32px !important;
   }
+  
+  /* Logo */
   .logo {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
     flex-shrink: 0 !important;
   }
-  .logo-name { font-size: 12px !important; }
+  .logo-name { font-size: 13px !important; }
   .logo-sub { display: none !important; }
-  .logo-mark { width: 26px !important; height: 26px !important; font-size: 13px !important; }
+  .logo-mark { width: 28px !important; height: 28px !important; font-size: 14px !important; }
 
+  /* Prayer & Hijri - CENTERED AND VISIBLE */
   .topbar-center {
     display: flex !important;
     flex-direction: row !important;
-    gap: 4px !important;
-    background: rgba(10,22,16,0.5) !important;
-    padding: 2px 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    background: rgba(10,22,16,0.6) !important;
+    padding: 2px 8px !important;
     border-radius: 20px !important;
+    justify-self: center !important;
   }
   .prayer-badge {
     font-size: 9px !important;
@@ -564,25 +578,39 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   .hijri {
     display: inline-block !important;
     font-size: 8px !important;
-    background: rgba(201,168,76,0.15) !important;
+    background: rgba(201,168,76,0.2) !important;
     padding: 2px 5px !important;
     border-radius: 12px !important;
+    white-space: nowrap !important;
   }
 
+  /* Right side - auth buttons */
   .topbar-right {
     display: flex !important;
     gap: 4px !important;
+    justify-self: end !important;
     flex-shrink: 0 !important;
   }
   .tbtn {
     display: inline-flex !important;
     padding: 4px 8px !important;
-    font-size: 10px !important;
+    font-size: 9px !important;
     white-space: nowrap !important;
   }
   .tbtn:not(.gold) {
     display: inline-flex !important;
   }
+  
+  /* Auth area (Sign In/Join Free) - FORCED VISIBLE */
+  #authArea {
+    display: flex !important;
+    gap: 4px !important;
+  }
+  #authArea .tbtn {
+    display: inline-flex !important;
+  }
+  
+  /* User area when logged in */
   .user-pill {
     display: flex !important;
     padding: 2px 5px 2px 2px !important;
@@ -590,15 +618,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   .uname {
     max-width: 45px !important;
     font-size: 9px !important;
-  }
-
-  /* Make sure auth area (Sign In/Join Free) is visible */
-  #authArea {
-    display: flex !important;
-    gap: 4px !important;
-  }
-  #authArea .tbtn {
-    display: inline-flex !important;
   }
   #userArea.hidden {
     display: none !important;
@@ -618,6 +637,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     transition: left 0.25s ease !important;
     background: var(--bg2) !important;
     display: flex !important;
+    flex-direction: column !important;
     overflow-y: auto !important;
     box-shadow: 2px 0 12px rgba(0,0,0,0.3) !important;
   }
@@ -1898,45 +1918,48 @@ function showMsg(msg, type) {
 loadChatCount();
 // Duas are now loaded via loadDuas() in DOMContentLoaded
 
-// ===== MOBILE SIDEBAR & NAVIGATION (FINAL) =====
+// ===== FINAL MOBILE SIDEBAR & NAVIGATION =====
 (function() {
-  const menuBtn = document.getElementById("mobileMenuBtn");
-  const sidebar = document.querySelector(".sidebar");
+  const menuBtn = document.getElementById('mobileMenuBtn');
+  const sidebar = document.querySelector('.sidebar');
   if (!menuBtn || !sidebar) return;
 
-  // Toggle sidebar
-  menuBtn.addEventListener("click", function(e) {
+  // Remove any existing listeners to avoid duplicates
+  const newBtn = menuBtn.cloneNode(true);
+  menuBtn.parentNode.replaceChild(newBtn, menuBtn);
+  const finalBtn = document.getElementById('mobileMenuBtn');
+
+  // Toggle sidebar on click
+  finalBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    sidebar.classList.toggle("open");
+    sidebar.classList.toggle('open');
   });
 
-  // Close when clicking outside
-  document.addEventListener("click", function(e) {
-    if (sidebar.classList.contains("open") && 
+  // Close sidebar when clicking outside
+  document.addEventListener('click', function(e) {
+    if (sidebar.classList.contains('open') && 
         !sidebar.contains(e.target) && 
-        e.target !== menuBtn) {
-      sidebar.classList.remove("open");
+        e.target !== finalBtn) {
+      sidebar.classList.remove('open');
     }
   });
 
   // Make all navigation items work
   function initNavClicks() {
-    document.querySelectorAll(".ni").forEach(item => {
-      item.removeEventListener("click", item._navClick);
+    document.querySelectorAll('.ni').forEach(item => {
+      item.removeEventListener('click', item._navClick);
       item._navClick = function(e) {
         e.stopPropagation();
         let viewId = this.id;
-        if (viewId && viewId.startsWith("n-")) {
+        if (viewId && viewId.startsWith('n-')) {
           let view = viewId.substring(2);
-          if (typeof setNav === "function") {
+          if (typeof setNav === 'function') {
             setNav(this, view);
-          } else {
-            console.error("setNav not defined");
           }
         }
-        sidebar.classList.remove("open");
+        sidebar.classList.remove('open');
       };
-      item.addEventListener("click", item._navClick);
+      item.addEventListener('click', item._navClick);
     });
   }
 
