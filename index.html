@@ -807,6 +807,44 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     text-align: center !important;
     padding: 6px 12px !important;
   }
+  
+  /* FORCE SINGLE COLUMN ON MOBILE */
+  #app {
+    display: block !important;
+    grid-template-columns: unset !important;
+  }
+  
+  .sidebar {
+    position: fixed !important;
+    left: -280px !important;
+    top: 56px !important;
+    bottom: 0 !important;
+    width: 270px !important;
+    z-index: 1000 !important;
+    transition: left 0.25s ease !important;
+    background: var(--bg2) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.3) !important;
+  }
+  
+  .sidebar.open {
+    left: 0 !important;
+  }
+  
+  .main {
+    width: 100% !important;
+    margin-left: 0 !important;
+    display: block !important;
+  }
+  
+  .topbar {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    position: relative !important;
+    z-index: 1001 !important;
+  }
 }
 </style>
 </head>
@@ -1932,6 +1970,21 @@ loadChatCount();
   }
   
   if (!sidebar) return;
+
+  // Fix grid on orientation change (portrait/landscape)
+function fixMobileGrid() {
+  if (window.innerWidth <= 680) {
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('app').style.gridTemplateColumns = 'unset';
+  } else {
+    document.getElementById('app').style.display = 'grid';
+    document.getElementById('app').style.gridTemplateColumns = '268px 1fr';
+  }
+}
+
+window.addEventListener('resize', fixMobileGrid);
+window.addEventListener('orientationchange', fixMobileGrid);
+fixMobileGrid(); // run once on load
   
   // Remove any existing listeners to avoid conflicts
   const newBtn = menuBtn.cloneNode(true);
