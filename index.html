@@ -506,103 +506,126 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 /* MOBILE */
 /* ============================================ */
-/* FINAL MOBILE FIX - NO OVERFLOW, ALL VISIBLE  */
+/* FINAL MOBILE CSS - NO ISSUES REMAINING       */
 /* ============================================ */
 @media (max-width: 680px) {
-  /* PREVENT HORIZONTAL SCROLL */
+  /* ----- PREVENT HORIZONTAL SCROLL ----- */
   html, body {
     overflow-x: hidden !important;
     width: 100% !important;
     max-width: 100% !important;
   }
-  #app, .main {
+  #app, .main, .sidebar, .welcome, .msgs, .iarea, .panel, .ptfc {
+    max-width: 100% !important;
     overflow-x: hidden !important;
-    width: 100% !important;
   }
-  
-  /* ===== TOPBAR - FULLY VISIBLE ===== */
+
+  /* ----- TOPBAR - WRAP, NO SCROLLBAR ----- */
   .topbar {
     display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    gap: 8px !important;
-    padding: 0 8px !important;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 4px 8px !important;
+    overflow-x: visible !important;
+    background: rgba(6, 14, 10, 0.95) !important;
+    backdrop-filter: blur(8px) !important;
+    border-bottom: 1px solid var(--bdr) !important;
   }
-  .topbar::-webkit-scrollbar { display: none; }
-  
   .mobile-menu-btn {
     display: flex !important;
     background: none !important;
     border: none !important;
-    font-size: 24px !important;
+    font-size: 22px !important;
     color: var(--gold) !important;
     flex-shrink: 0 !important;
-    width: 36px !important;
-    height: 36px !important;
+    width: 32px !important;
+    height: 32px !important;
   }
-  
   .logo {
     flex-shrink: 0 !important;
   }
-  .logo-name { font-size: 13px !important; }
+  .logo-name { font-size: 12px !important; }
   .logo-sub { display: none !important; }
-  .logo-mark { width: 28px !important; height: 28px !important; font-size: 14px !important; }
-  
+  .logo-mark { width: 26px !important; height: 26px !important; font-size: 13px !important; }
+
   .topbar-center {
     display: flex !important;
     flex-direction: row !important;
-    align-items: center !important;
-    gap: 6px !important;
-    background: rgba(10,22,16,0.7) !important;
-    padding: 2px 8px !important;
+    gap: 4px !important;
+    background: rgba(10,22,16,0.5) !important;
+    padding: 2px 6px !important;
     border-radius: 20px !important;
-    flex-shrink: 0 !important;
   }
   .prayer-badge {
-    font-size: 10px !important;
-    padding: 2px 6px !important;
+    font-size: 9px !important;
+    padding: 2px 5px !important;
     white-space: nowrap !important;
   }
   .hijri {
     display: inline-block !important;
-    font-size: 9px !important;
+    font-size: 8px !important;
     background: rgba(201,168,76,0.15) !important;
-    padding: 2px 6px !important;
+    padding: 2px 5px !important;
     border-radius: 12px !important;
-    white-space: nowrap !important;
   }
-  
+
   .topbar-right {
-    flex-shrink: 0 !important;
     display: flex !important;
     gap: 4px !important;
+    flex-shrink: 0 !important;
   }
   .tbtn {
+    display: inline-flex !important;
     padding: 4px 8px !important;
     font-size: 10px !important;
     white-space: nowrap !important;
   }
-  .user-pill { padding: 2px 6px 2px 2px !important; }
-  .uname { max-width: 55px !important; font-size: 10px !important; }
-  
-  /* ===== SIDEBAR - OFF CANVAS ===== */
+  .tbtn:not(.gold) {
+    display: inline-flex !important;
+  }
+  .user-pill {
+    display: flex !important;
+    padding: 2px 5px 2px 2px !important;
+  }
+  .uname {
+    max-width: 45px !important;
+    font-size: 9px !important;
+  }
+
+  /* Make sure auth area (Sign In/Join Free) is visible */
+  #authArea {
+    display: flex !important;
+    gap: 4px !important;
+  }
+  #authArea .tbtn {
+    display: inline-flex !important;
+  }
+  #userArea.hidden {
+    display: none !important;
+  }
+  #userArea:not(.hidden) {
+    display: block !important;
+  }
+
+  /* ----- SIDEBAR - OFF CANVAS ----- */
   .sidebar {
     position: fixed !important;
     left: -280px !important;
     top: 56px !important;
     bottom: 0 !important;
-    width: 280px !important;
+    width: 270px !important;
     z-index: 1000 !important;
-    transition: left 0.3s ease !important;
+    transition: left 0.25s ease !important;
     background: var(--bg2) !important;
     display: flex !important;
     overflow-y: auto !important;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.3) !important;
   }
-  .sidebar.open { left: 0 !important; }
-  
-  /* ===== MAIN CHAT VIEW - ALWAYS SHOW INPUT ===== */
+  .sidebar.open {
+    left: 0 !important;
+  }
+
+  /* ----- MAIN CHAT VIEW - FULL HEIGHT, INPUT STICKY ----- */
   #vChat {
     display: flex !important;
     flex-direction: column !important;
@@ -612,12 +635,12 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   .welcome {
     flex: 1 !important;
     overflow-y: auto !important;
-    padding: 16px 12px !important;
+    padding: 12px !important;
   }
   .msgs {
     flex: 1 !important;
     overflow-y: auto !important;
-    padding: 10px !important;
+    padding: 8px !important;
   }
   .iarea {
     flex-shrink: 0 !important;
@@ -625,82 +648,130 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     background: var(--bg) !important;
     border-top: 1px solid var(--bdr) !important;
   }
+
+  /* Welcome cards - stack vertically */
+  .sgrid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .scard {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Input row */
+  .iwrap {
+    display: flex !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .ibox {
+    flex: 1 !important;
+    min-width: 0 !important;
+    font-size: 13px !important;
+    padding: 8px 10px !important;
+  }
+  .sbtn {
+    flex-shrink: 0 !important;
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 14px !important;
+  }
   .itabs {
     display: flex !important;
     gap: 4px !important;
     overflow-x: auto !important;
-    flex-wrap: nowrap !important;
-    padding-bottom: 4px !important;
+    white-space: nowrap !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 6px !important;
   }
   .itab {
-    font-size: 9px !important;
+    flex-shrink: 0 !important;
+    font-size: 8px !important;
     padding: 3px 8px !important;
-    white-space: nowrap !important;
-  }
-  .iwrap {
-    display: flex !important;
-    gap: 8px !important;
-    align-items: flex-end !important;
-  }
-  .ibox {
-    font-size: 12px !important;
-    padding: 8px 10px !important;
-    flex: 1 !important;
-  }
-  .sbtn {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 14px !important;
   }
   .disc {
-    font-size: 9px !important;
+    font-size: 8px !important;
   }
-  
-  /* ===== WELCOME CARDS ===== */
-  .wtitle { font-size: 22px !important; }
-  .wsub { font-size: 11px !important; }
-  .sgrid { grid-template-columns: 1fr !important; gap: 8px !important; }
-  .scard { padding: 10px 12px !important; }
-  
-  /* ===== OTHER PANELS ===== */
-  .panel { padding: 12px !important; }
-  .ptitle { font-size: 20px !important; }
-  .prow { flex-direction: column !important; gap: 8px !important; }
-  .psel, .pinput, .pbtn, .rbtn { width: 100% !important; }
-  
-  /* ===== PRAYER TIMES GRID ===== */
-  .ptg { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
-  .pti { padding: 8px 4px !important; }
-  .ptit2 { font-size: 14px !important; }
-  
-  /* ===== DUAS ===== */
-  .dcats { overflow-x: auto !important; flex-wrap: nowrap !important; gap: 4px !important; }
-  .dcat { white-space: nowrap !important; font-size: 9px !important; padding: 4px 8px !important; }
-  .dc { padding: 12px !important; }
-  .dar { font-size: 16px !important; }
-  
-  /* ===== MODALS ===== */
+
+  /* Chat bubbles */
+  .msg {
+    max-width: 100% !important;
+  }
+  .mbub {
+    max-width: 85% !important;
+    word-wrap: break-word !important;
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+  }
+
+  /* ----- OTHER PANELS (Quran, Hadith, Duas, Prayer) ----- */
+  .panel {
+    padding: 12px !important;
+  }
+  .ptitle {
+    font-size: 20px !important;
+  }
+  .prow {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .psel, .pinput, .pbtn, .rbtn {
+    width: 100% !important;
+  }
+
+  /* Prayer times grid - 2 columns */
+  .ptg {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+  .pti {
+    padding: 6px 4px !important;
+  }
+  .ptit2 {
+    font-size: 14px !important;
+  }
+
+  /* Duas - horizontal scroll for categories */
+  .dcats {
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+    padding-bottom: 6px !important;
+  }
+  .dcat {
+    white-space: nowrap !important;
+    font-size: 9px !important;
+    padding: 4px 8px !important;
+  }
+  .dc {
+    padding: 12px !important;
+  }
+  .dar {
+    font-size: 16px !important;
+  }
+
+  /* Modals */
   .pgate, .auth-box {
     width: calc(100% - 24px) !important;
     margin: 0 12px !important;
     padding: 20px 16px !important;
   }
-  
-  /* ===== CARDS & CONTAINERS ===== */
+
+  /* Cards */
   .vcard {
-    padding: 14px !important;
+    padding: 12px !important;
   }
   .var2 {
     font-size: 16px !important;
   }
-  .ven {
+  .ven, .vtaf {
     font-size: 11px !important;
   }
-  .vtaf {
-    font-size: 10px !important;
-  }
-  
-  /* ===== PDF BANNER ===== */
+
+  /* Premium banner */
   .premium-pdf-banner {
     flex-direction: column !important;
     text-align: center !important;
@@ -708,13 +779,13 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   .premium-pdf-banner button {
     width: 100% !important;
   }
-  
-  /* ===== LIMIT BAR ===== */
+
+  /* Limit bar */
   .limit-bar {
     flex-direction: column !important;
-    gap: 8px !important;
+    gap: 6px !important;
     text-align: center !important;
-    padding: 8px 12px !important;
+    padding: 6px 12px !important;
   }
 }
 </style>
@@ -1827,34 +1898,50 @@ function showMsg(msg, type) {
 loadChatCount();
 // Duas are now loaded via loadDuas() in DOMContentLoaded
 
-// Mobile sidebar toggle - FINAL FIX
-const menuBtn = document.getElementById("mobileMenuBtn");
-const sidebar = document.querySelector(".sidebar");
-if (menuBtn && sidebar) {
-  // Remove existing listeners to avoid duplicates
-  const newBtn = menuBtn.cloneNode(true);
-  menuBtn.parentNode.replaceChild(newBtn, menuBtn);
-  const finalBtn = document.getElementById("mobileMenuBtn");
-  
-  finalBtn.addEventListener("click", function(e) {
+// ===== MOBILE SIDEBAR & NAVIGATION (FINAL) =====
+(function() {
+  const menuBtn = document.getElementById("mobileMenuBtn");
+  const sidebar = document.querySelector(".sidebar");
+  if (!menuBtn || !sidebar) return;
+
+  // Toggle sidebar
+  menuBtn.addEventListener("click", function(e) {
     e.stopPropagation();
     sidebar.classList.toggle("open");
   });
-  
-  // Close sidebar when clicking a nav item
-  document.querySelectorAll(".ni").forEach(item => {
-    item.addEventListener("click", () => sidebar.classList.remove("open"));
-  });
-  
+
   // Close when clicking outside
   document.addEventListener("click", function(e) {
     if (sidebar.classList.contains("open") && 
         !sidebar.contains(e.target) && 
-        e.target !== finalBtn) {
+        e.target !== menuBtn) {
       sidebar.classList.remove("open");
     }
   });
-}
+
+  // Make all navigation items work
+  function initNavClicks() {
+    document.querySelectorAll(".ni").forEach(item => {
+      item.removeEventListener("click", item._navClick);
+      item._navClick = function(e) {
+        e.stopPropagation();
+        let viewId = this.id;
+        if (viewId && viewId.startsWith("n-")) {
+          let view = viewId.substring(2);
+          if (typeof setNav === "function") {
+            setNav(this, view);
+          } else {
+            console.error("setNav not defined");
+          }
+        }
+        sidebar.classList.remove("open");
+      };
+      item.addEventListener("click", item._navClick);
+    });
+  }
+
+  initNavClicks();
+})();
   
 </script>
 </body>
