@@ -167,7 +167,8 @@
   --err:#E8635A;--ok:#4CAF88;--prem:#C9A84C;--prem-bg:rgba(201,168,76,.1);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;overflow:hidden;}
+html,body{height:100%;overflow:hidden;position:fixed;width:100%;}
+@media(max-width:680px){html,body{position:relative;}}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;}
 
 /* BACKGROUNDS */
@@ -180,7 +181,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   background-size:56px 56px;}
 
 /* LAYOUT */
-#app{position:relative;z-index:1;display:grid;grid-template-columns:268px 1fr;grid-template-rows:56px 1fr;height:100vh;}
+#app{position:relative;z-index:1;display:grid;grid-template-columns:268px 1fr;grid-template-rows:56px 1fr;height:100vh;overflow:hidden;}
+@media(max-width:680px){#app{display:flex;flex-direction:column;height:100dvh;height:100vh;overflow:hidden;}}
 
 /* TOPBAR */
 .topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 18px;
@@ -297,7 +299,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .up-btn:hover{transform:scale(1.02);box-shadow:0 4px 16px rgba(201,168,76,.25);}
 
 /* MAIN */
-.main{display:flex;flex-direction:column;overflow:hidden;position:relative;}
+.main{display:flex;flex-direction:column;overflow:hidden;position:relative;min-height:0;min-width:0;}
+@media(max-width:680px){.main{flex:1;height:calc(100vh - 56px);overflow:hidden;}}
 
 /* WELCOME */
 .welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -504,277 +507,185 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 /* HIDDEN */
 .hidden{display:none!important;}
 
-/* MOBILE */
-/* ============================================ */
-@media (max-width: 680px) {
-  /* PREVENT HORIZONTAL SCROLL */
-  html, body, #app, .main {
-    overflow-x: hidden !important;
-    width: 100% !important;
-    max-width: 100% !important;
+/* ── MOBILE ── */
+@media(max-width:680px){
+  html,body{overflow:hidden;position:relative;}
+
+  #app{
+    display:flex !important;
+    flex-direction:column !important;
+    height:100vh !important;
+    height:100dvh !important;
+    overflow:hidden !important;
   }
-  
-  /* FORCE SINGLE COLUMN ON MOBILE */
-  #app {
-    display: block !important;
-    grid-template-columns: unset !important;
+
+  .topbar{
+    flex-shrink:0;
+    padding:0 10px;
+    height:56px;
+    z-index:1001;
   }
-  
-  /* TOPBAR - VISIBLE ALWAYS */
-  .topbar {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 6px 8px !important;
-    background: rgba(6, 14, 10, 0.95) !important;
-    gap: 6px !important;
-    position: relative !important;
-    z-index: 1001 !important;
+
+  .logo-name{font-size:13px !important;}
+  .logo-sub{display:none !important;}
+  .logo-mark{width:28px !important;height:28px !important;font-size:13px !important;}
+  .topbar-center{display:none !important;}
+  .tbtn{padding:4px 8px !important;font-size:10px !important;}
+
+  /* SIDEBAR — off-canvas slide in */
+  .sidebar{
+    position:fixed !important;
+    left:-280px !important;
+    top:56px !important;
+    bottom:0 !important;
+    width:270px !important;
+    z-index:2000 !important;
+    transition:left 0.25s ease !important;
+    overflow-y:auto !important;
+    background:var(--bg2) !important;
+    display:flex !important;
+    flex-direction:column !important;
+    box-shadow:4px 0 20px rgba(0,0,0,0.5) !important;
   }
-  
-  .mobile-menu-btn {
-    display: flex !important;
-    flex-shrink: 0 !important;
-    background: none !important;
-    border: none !important;
-    font-size: 22px !important;
-    color: var(--gold) !important;
-    width: 32px !important;
-    height: 32px !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
+  .sidebar.open{left:0 !important;}
+
+  /* MAIN — fills remaining height below topbar */
+  .main{
+    flex:1 !important;
+    overflow:hidden !important;
+    display:flex !important;
+    flex-direction:column !important;
+    height:calc(100vh - 56px) !important;
+    height:calc(100dvh - 56px) !important;
+    width:100% !important;
+    position:relative !important;
   }
-  
-  .logo {
-    flex-shrink: 0 !important;
+
+  /* ALL VIEWS — fill main exactly */
+  #vChat,#vQuran,#vHadith,#vDuas,#vAudio,#vLearn,#vPrayer{
+    width:100% !important;
+    height:100% !important;
+    overflow:hidden !important;
+    flex-shrink:0 !important;
   }
-  .logo-name { font-size: 12px !important; }
-  .logo-sub { display: none !important; }
-  .logo-mark { width: 26px !important; height: 26px !important; font-size: 13px !important; }
-  
-  .topbar-center {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 2px !important;
-    background: rgba(10,22,16,0.5) !important;
-    padding: 2px 6px !important;
-    border-radius: 12px !important;
-    flex-shrink: 1 !important;
-    min-width: 0 !important;
+
+  /* CHAT view internal layout */
+  #vChat{
+    display:flex !important;
+    flex-direction:column !important;
   }
-  .prayer-badge {
-    font-size: 8px !important;
-    padding: 1px 4px !important;
-    gap: 3px !important;
+
+  .welcome{
+    flex:1 !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    padding:16px 12px !important;
   }
-  .hijri {
-    font-size: 7px !important;
-    display: block !important;
+
+  .bsml{font-size:22px !important;}
+  .btrans{font-size:11px !important;}
+  .wtitle{font-size:24px !important;}
+  .wsub{font-size:12px !important;margin-bottom:24px !important;}
+
+  .sgrid{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
+    width:100% !important;
   }
-  
-  .topbar-right {
-    display: flex !important;
-    gap: 4px !important;
-    flex-shrink: 0 !important;
+
+  .scard{padding:10px 12px !important;}
+  .stit{font-size:11px !important;}
+  .sdesc{font-size:10px !important;}
+
+  /* MESSAGES area */
+  .msgs{
+    flex:1 !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    padding:12px !important;
   }
-  .tbtn {
-    padding: 3px 6px !important;
-    font-size: 8px !important;
+
+  .mbub{max-width:90% !important;font-size:13px !important;}
+
+  /* INPUT — always pinned at bottom */
+  .iarea{
+    flex-shrink:0 !important;
+    padding:8px 12px !important;
+    background:rgba(6,14,10,0.95) !important;
+    border-top:1px solid var(--bdr) !important;
   }
-  
-  /* SIDEBAR OFF-CANVAS */
-  .sidebar {
-    position: fixed !important;
-    left: -280px !important;
-    top: 56px !important;
-    bottom: 0 !important;
-    width: 270px !important;
-    z-index: 1000 !important;
-    transition: left 0.25s ease !important;
-    background: var(--bg2) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow-y: auto !important;
-    box-shadow: 2px 0 12px rgba(0,0,0,0.3) !important;
+
+  .itabs{
+    display:flex !important;
+    gap:4px !important;
+    overflow-x:auto !important;
+    flex-wrap:nowrap !important;
+    padding-bottom:4px !important;
+    margin-bottom:6px !important;
+    -webkit-overflow-scrolling:touch !important;
+    scrollbar-width:none !important;
   }
-  .sidebar.open {
-    left: 0 !important;
+  .itabs::-webkit-scrollbar{display:none;}
+  .itab{flex-shrink:0 !important;font-size:9px !important;padding:3px 8px !important;}
+
+  .iwrap{display:flex !important;gap:8px !important;align-items:flex-end !important;}
+  .ibox{flex:1 !important;font-size:14px !important;padding:10px 12px !important;min-height:40px !important;}
+  .sbtn{width:40px !important;height:40px !important;flex-shrink:0 !important;font-size:16px !important;}
+  .disc{font-size:8px !important;margin-top:4px !important;}
+
+  .limit-bar{
+    flex-shrink:0 !important;
+    flex-direction:column !important;
+    gap:4px !important;
+    padding:6px 12px !important;
+    text-align:center !important;
   }
-  
-  /* MAIN CONTENT - FULL WIDTH */
-  .main {
-    width: 100% !important;
-    margin-left: 0 !important;
-    display: block !important;
-  }
-  
-  /* CHAT VIEW - CLEARLY VISIBLE */
-  #vChat {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100vh !important;
-    overflow: hidden !important;
-  }
-  
-  .welcome {
-    padding: 12px !important;
-    overflow-y: auto !important;
-    flex: 1 !important;
-  }
-  
-  /* SUGGESTION CARDS - STACK VERTICALLY FOR CLARITY */
-  .sgrid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    width: 100% !important;
-  }
-  .scard {
-    width: 100% !important;
-    padding: 12px !important;
-  }
-  .stit {
-    font-size: 12px !important;
-  }
-  .sdesc {
-    font-size: 10px !important;
-  }
-  
-  /* MESSAGES AREA */
-  .msgs {
-    flex: 1 !important;
-    overflow-y: auto !important;
-    padding: 10px !important;
-  }
-  .msg {
-    max-width: 100% !important;
-  }
-  .mbub {
-    max-width: 85% !important;
-    font-size: 12px !important;
-    padding: 8px 12px !important;
-  }
-  
-  /* INPUT AREA - ALWAYS VISIBLE AT BOTTOM */
-  .iarea {
-    flex-shrink: 0 !important;
-    padding: 8px !important;
-    background: var(--bg) !important;
-    border-top: 1px solid var(--bdr) !important;
-  }
-  .itabs {
-    display: flex !important;
-    gap: 4px !important;
-    overflow-x: auto !important;
-    padding-bottom: 6px !important;
-    margin-bottom: 6px !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  .itab {
-    flex-shrink: 0 !important;
-    font-size: 8px !important;
-    padding: 3px 8px !important;
-  }
-  .iwrap {
-    display: flex !important;
-    gap: 8px !important;
-    width: 100% !important;
-  }
-  .ibox {
-    flex: 1 !important;
-    font-size: 13px !important;
-    padding: 8px 10px !important;
-    min-height: 36px !important;
-  }
-  .sbtn {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 14px !important;
-    flex-shrink: 0 !important;
-  }
-  .disc {
-    font-size: 7px !important;
-    margin-top: 6px !important;
-  }
-  
+
   /* PANELS */
-  .panel {
-    padding: 12px !important;
-  }
-  .ptitle {
-    font-size: 18px !important;
-  }
-  .prow {
-    flex-direction: column !important;
-    gap: 8px !important;
-  }
-  .psel, .pinput, .pbtn, .rbtn {
-    width: 100% !important;
-  }
-  
-  /* PRAYER TIMES */
-  .ptg {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 6px !important;
-  }
-  .pti {
-    padding: 8px 4px !important;
-  }
-  .ptit2 {
-    font-size: 13px !important;
-  }
-  
+  .panel{overflow-y:auto !important;padding:14px !important;height:100% !important;-webkit-overflow-scrolling:touch !important;}
+  .ptitle{font-size:20px !important;}
+  .prow{flex-direction:column !important;gap:6px !important;}
+  .psel,.pinput,.pbtn,.rbtn{width:100% !important;}
+
+  /* PRAYER GRID */
+  .ptg{grid-template-columns:repeat(2,1fr) !important;gap:8px !important;}
+  .ptit2{font-size:16px !important;}
+
   /* DUAS */
-  .dcats {
-    overflow-x: auto !important;
-    flex-wrap: nowrap !important;
-    gap: 6px !important;
-    padding-bottom: 8px !important;
+  .dcats{
+    display:flex !important;
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    gap:6px !important;
+    padding-bottom:6px !important;
+    scrollbar-width:none !important;
   }
-  .dcat {
-    white-space: nowrap !important;
-    font-size: 9px !important;
-    padding: 4px 10px !important;
-  }
-  .dc {
-    padding: 12px !important;
-  }
-  .dar {
-    font-size: 15px !important;
-  }
-  
+  .dcats::-webkit-scrollbar{display:none;}
+  .dcat{white-space:nowrap !important;flex-shrink:0 !important;font-size:10px !important;}
+
   /* MODALS */
-  .pgate, .auth-box {
-    width: calc(100% - 24px) !important;
-    margin: 0 12px !important;
-    padding: 20px 16px !important;
+  .pgate,.auth-box{
+    width:calc(100% - 24px) !important;
+    padding:20px 16px !important;
+    max-height:90vh !important;
+    overflow-y:auto !important;
   }
-  
-  /* LIMIT BAR */
-  .limit-bar {
-    flex-direction: column !important;
-    gap: 6px !important;
-    text-align: center !important;
-    padding: 6px 12px !important;
-  }
-  
-  /* DUA WIDGET ON MOBILE */
-  .dua-w {
-    max-height: 120px !important;
-    margin: 6px 8px !important;
-    padding: 8px 10px !important;
-  }
-  
-  .dua-war {
-    font-size: 12px !important;
-    max-height: 60px !important;
-  }
-  
-  .dua-wtr {
-    font-size: 9px !important;
+
+  /* MOBILE MENU BUTTON */
+  .mobile-menu-btn{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:36px !important;
+    height:36px !important;
+    font-size:22px !important;
+    background:none !important;
+    border:none !important;
+    color:var(--gold) !important;
+    cursor:pointer !important;
+    flex-shrink:0 !important;
   }
 }
 
@@ -871,6 +782,18 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     width: 100% !important;
     margin-bottom: 8px;
   }
+}
+
+/* Desktop sidebar scroll fix */
+@media(min-width:681px){
+  .sidebar{display:flex;flex-direction:column;height:calc(100vh - 56px);overflow:hidden;}
+  .nav{flex:1;overflow-y:auto;min-height:0;}
+  .nav::-webkit-scrollbar{width:3px;}
+  .nav::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+  .dua-w{flex-shrink:0;max-height:120px;overflow:hidden;}
+  .pt-w{flex-shrink:0;}
+  .up-banner{flex-shrink:0;}
+  #sidePremium{flex-shrink:0;}
 }
 
 </style>
@@ -1536,6 +1459,11 @@ async function searchCityPrayerTimes() {
 
 // Call on page load (default Karachi)
 fetchPrayerTimes(24.8607, 67.0011, "Karachi");
+
+// Trigger prayer times immediately on page load
+document.addEventListener('DOMContentLoaded', () => {
+  fetchPrayerTimes(24.8607, 67.0011, "Karachi");
+});
   
 // ── USER DROPDOWN ────────────────────────────────────────────────────────────
 function toggleUserDrop() {
@@ -2070,14 +1998,14 @@ fixMobileGrid(); // run once on load
   
   // Close sidebar when clicking outside
   document.addEventListener('click', function(e) {
-    if (sidebar && sidebar.classList && sidebar.classList.contains('open')) {
-      const isClickInside = sidebar.contains(e.target);
-      const isClickOnBtn = finalBtn && finalBtn.contains(e.target);
-      if (!isClickInside && !isClickOnBtn) {
-        sidebar.classList.remove('open');
-      }
+  if (!sidebar) return;
+  if (sidebar.classList.contains('open')) {
+    const btn = document.getElementById('mobileMenuBtn');
+    if (!sidebar.contains(e.target) && (!btn || !btn.contains(e.target))) {
+      sidebar.classList.remove('open');
     }
-  });
+  }
+}, true); // capture phase catches it before any stopPropagation
   
   // FIX: Make ALL navigation items work on mobile + desktop
   function attachNavListeners() {
