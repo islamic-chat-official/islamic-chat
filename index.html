@@ -1190,8 +1190,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (session?.user) await setUser(session.user);
   
-  // Load authentic Duas from JSON
-  await loadDuas();
+  // Load authentic Duas from JSON (with fallback)
+  try {
+    await loadDuas();
+  } catch(e) {
+    console.warn('Duas failed to load, using fallback');
+    document.getElementById('dailyDuaArabic').innerHTML = 'اللهم إني أسألك علماً نافعاً';
+    document.getElementById('dailyDuaTranslation').innerHTML = 'O Allah, I ask You for beneficial knowledge.';
+  }
   
   // Initialize Hadith
   if (!hadithLoaded) { rndH(); hadithLoaded = true; }
@@ -1203,14 +1209,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     window.history.replaceState({}, '', window.location.pathname);
   }
   
-  // FIX: Ensure chat messages area is scrollable and visible on mobile
+  // FIX: Ensure chat messages area is scrollable
   const msgsContainer = document.getElementById('msgs');
   if (msgsContainer) {
     msgsContainer.style.overflowY = 'auto';
     msgsContainer.style.WebkitOverflowScrolling = 'touch';
   }
   
-  // FIX: On mobile, when user focuses on textarea, scroll it into view
+  // FIX: On mobile, focus scroll
   const textarea = document.getElementById('ui');
   if (textarea) {
     textarea.addEventListener('focus', function() {
@@ -1221,8 +1227,12 @@ window.addEventListener('DOMContentLoaded', async () => {
       }, 300);
     });
   }
+  
+  // Force prayer times to load immediately
+  fetchPrayerTimes(24.8607, 67.0011, "Karachi");
+});
 
-
+// ── AUTH STATE CHANGE (outside DOMContentLoaded) ──
 sb.auth.onAuthStateChange(async (event, session) => {
   if (event === 'SIGNED_IN' && session?.user)  await setUser(session.user);
   if (event === 'SIGNED_OUT')                   clearUser();
