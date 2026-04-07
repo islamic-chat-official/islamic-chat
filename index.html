@@ -828,6 +828,51 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   }
 }
 
+/* FIX: Ensure all interactive elements respond on mobile */
+.scard, .ni, .ncb, .tbtn, .sbtn, .itab, .dcat, .pbtn, .rbtn, .up-btn, .pgate-cta {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* DESKTOP: Prevent Dua widget from overlapping sidebar buttons */
+@media (min-width: 681px) {
+  .sidebar {
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100vh !important;
+  }
+  .nav {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    min-height: 0;
+  }
+  .dua-w {
+    flex-shrink: 0;
+    max-height: 140px;
+    overflow-y: auto;
+    margin: 8px 10px;
+  }
+  .pt-w, .up-banner {
+    flex-shrink: 0;
+  }
+}
+
+/* MOBILE: Make sure chat messages area is scrollable */
+@media (max-width: 680px) {
+  .msgs {
+    -webkit-overflow-scrolling: touch;
+  }
+  .sgrid {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .scard {
+    width: 100% !important;
+    margin-bottom: 8px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1242,7 +1287,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     msgsContainer.style.WebkitOverflowScrolling = 'touch';
   }
   
-  // FIX: Ensure input textarea is accessible
+  // FIX: On mobile, when user focuses on textarea, scroll it into view
   const textarea = document.getElementById('ui');
   if (textarea) {
     textarea.addEventListener('focus', function() {
@@ -1253,7 +1298,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       }, 300);
     });
   }
-});
+
 
 sb.auth.onAuthStateChange(async (event, session) => {
   if (event === 'SIGNED_IN' && session?.user)  await setUser(session.user);
@@ -1521,16 +1566,22 @@ function showView(v) {
   if (target) target.classList.remove('hidden');
   if (v === 'hadith' && !hadithLoaded) { rndH(); hadithLoaded = true; }
   if (v === 'duas') renderDuas('morning');
-  if (v === 'chat') {
-      document.getElementById('vChat').style.display = 'flex';
-      document.getElementById('vChat').classList.remove('hidden');
-      // Reset chat UI
-      document.getElementById('ws').classList.remove('hidden');
-      document.getElementById('msgs').classList.add('hidden');
-      document.getElementById('msgs').innerHTML = '';
-      chatStarted = false;
-      chatHistory = [];
-   }
+    if (v === 'chat') {
+    const chatContainer = document.getElementById('vChat');
+    if (chatContainer) {
+      chatContainer.style.display = 'flex';
+      chatContainer.classList.remove('hidden');
+    }
+    const ws = document.getElementById('ws');
+    const msgs = document.getElementById('msgs');
+    if (ws) ws.classList.remove('hidden');
+    if (msgs) {
+      msgs.classList.add('hidden');
+      msgs.innerHTML = '';
+    }
+    chatStarted = false;
+    chatHistory = [];
+  }
 }
 
 function setMode(el, m) {
@@ -1563,7 +1614,19 @@ function goToFreemius() {
 }
 
 // ── CHAT ─────────────────────────────────────────────────────────────────────
-function sugSend(c) { document.getElementById('ui').value = c.querySelector('.sdesc').textContent; send(); }
+function sugSend(c) {
+  // Get question text from the clicked card
+  let question = c.querySelector('.sdesc')?.textContent;
+  if (!question) {
+    question = c.querySelector('.stit')?.textContent || c.innerText.trim();
+  }
+  const textarea = document.getElementById('ui');
+  textarea.value = question;
+  textarea.style.height = 'auto';
+  textarea.style.height = Math.min(textarea.scrollHeight, 140) + 'px';
+  // Small delay to ensure UI is ready, then send
+  setTimeout(() => send(), 50);
+}
 function hkey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
 function ar(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 140) + 'px'; }
 function esc(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -1579,8 +1642,10 @@ async function send() {
   }
 
   if (!chatStarted) {
-    document.getElementById('ws').classList.add('hidden');
-    document.getElementById('msgs').classList.remove('hidden');
+    const ws = document.getElementById('ws');
+    const msgs = document.getElementById('msgs');
+    if (ws) ws.classList.add('hidden');
+    if (msgs) msgs.classList.remove('hidden');
     chatStarted = true;
   }
 
