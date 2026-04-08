@@ -532,6 +532,20 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   .topbar-center{display:none !important;}
   .tbtn{padding:4px 8px !important;font-size:10px !important;}
 
+    /* Force view switching on mobile */
+  #vChat, #vQuran, #vHadith, #vDuas, #vAudio, #vLearn, #vPrayer {
+    display: block !important;
+  }
+  #vChat.hidden, #vQuran.hidden, #vHadith.hidden, #vDuas.hidden,
+  #vAudio.hidden, #vLearn.hidden, #vPrayer.hidden {
+    display: none !important;
+  }
+  /* Chat view needs flex layout when visible */
+  #vChat:not(.hidden) {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
   /* SIDEBAR — off-canvas slide in */
   .sidebar{
     position:fixed !important;
