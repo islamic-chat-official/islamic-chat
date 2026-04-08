@@ -579,8 +579,19 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   #vChat,#vQuran,#vHadith,#vDuas,#vAudio,#vLearn,#vPrayer{
     width:100% !important;
     height:100% !important;
-    overflow:hidden !important;
     flex-shrink:0 !important;
+  }
+
+  /* Allow scrolling on panel views (Quran, Hadith, Duas, Audio, Learn, Prayer) */
+  #vQuran, #vHadith, #vDuas, #vAudio, #vLearn, #vPrayer {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  /* Chat view should not scroll as a whole (its inner messages area scrolls) */
+  #vChat {
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   /* CHAT view internal layout */
