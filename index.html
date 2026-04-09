@@ -821,7 +821,81 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   #sidePremium{flex-shrink:0;}
 }
 
+/* Light mode theme (applied when body has class 'light-mode') */
+body.light-mode {
+  --bg: #F5F3F0;
+  --bg2: #FFFDF9;
+  --surf: #FFFFFF;
+  --surf2: #F8F6F2;
+  --text: #1A1A1A;
+  --muted: #5A5A5A;
+  --faint: #8A8A8A;
+  --bdr: rgba(0,0,0,0.1);
+}
+
+/* Force footer visibility on all views (desktop + mobile) */
+.main {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+#vChat, #vQuran, #vHadith, #vDuas, #vAudio, #vLearn, #vPrayer {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+/* Inner scrollable areas */
+.welcome, .msgs, .panel {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Input area and footer never shrink */
+.iarea, .app-footer {
+  flex-shrink: 0 !important;
+}
+
+/* Ensure footer is visible on all viewports */
+.app-footer {
+  background: var(--bg) !important;
+  width: 100% !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Fix mobile chat footer visibility */
+@media (max-width: 680px) {
+  #vChat {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+  }
+  #vChat .msgs {
+    flex: 1;
+    overflow-y: auto;
+  }
+  #vChat .iarea,
+  #vChat .app-footer {
+    flex-shrink: 0;
+  }
+}
+
 </style>
+
+<script>
+  // Apply saved theme from localStorage (set by /settings page)
+  (function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-mode');
+    }
+  })();
+</script>
+  
 </head>
 <body>
 <div class="orb"></div>
