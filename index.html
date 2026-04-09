@@ -833,57 +833,6 @@ body.light-mode {
   --bdr: rgba(0,0,0,0.1);
 }
 
-/* Force footer visibility on all views (desktop + mobile) */
-.main {
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-}
-
-#vChat, #vQuran, #vHadith, #vDuas, #vAudio, #vLearn, #vPrayer {
-  flex: 1 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-}
-
-/* Inner scrollable areas */
-.welcome, .msgs, .panel {
-  flex: 1 !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-}
-
-/* Input area and footer never shrink */
-.iarea, .app-footer {
-  flex-shrink: 0 !important;
-}
-
-/* Ensure footer is visible on all viewports */
-.app-footer {
-  background: var(--bg) !important;
-  width: 100% !important;
-  position: relative !important;
-  z-index: 10 !important;
-}
-
-/* Fix mobile chat footer visibility */
-@media (max-width: 680px) {
-  #vChat {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-  }
-  #vChat .msgs {
-    flex: 1;
-    overflow-y: auto;
-  }
-  #vChat .iarea,
-  #vChat .app-footer {
-    flex-shrink: 0;
-  }
-}
-
 </style>
 
 <script>
