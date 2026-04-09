@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Settings – Islamic Chat</title>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-dim: rgba(201,168,76,.13);
+      --gold-border: rgba(201,168,76,.2);
+      --em: #1A6B52;
+      --em-deep: #0D3828;
+      --em-mid: #155C45;
+      --bg: #060E0A;
+      --bg2: #0A1610;
+      --bg3: #0F1E14;
+      --surf: #141F18;
+      --surf2: #192616;
+      --surf3: #1E2D1A;
+      --bdr: rgba(201,168,76,.15);
+      --text: #E8E2D2;
+      --muted: #859680;
+      --faint: #526056;
+      --err: #E8635A;
+      --ok: #4CAF88;
+      --prem-bg: rgba(201,168,76,.1);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.6;
+      padding: 24px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--surf);
+      border: 1px solid var(--bdr);
+      border-radius: 20px;
+      padding: 32px;
+    }
+    h1 { color: var(--gold); font-family: 'Amiri', serif; font-size: 36px; margin-bottom: 8px; }
+    .sub { color: var(--muted); font-size: 14px; margin-bottom: 32px; border-left: 3px solid var(--gold); padding-left: 12px; }
+    h2 { color: var(--gold-light); font-size: 20px; margin: 24px 0 12px; }
+    .vcard {
+      background: var(--bg2);
+      border: 1px solid var(--bdr);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 20px;
+      transition: all .2s;
+    }
+    .vref {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .pbtn {
+      background: linear-gradient(135deg, var(--em-mid), var(--em-deep));
+      border: 1px solid var(--bdr);
+      border-radius: 10px;
+      padding: 8px 16px;
+      color: var(--gold-light);
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+      font-weight: 500;
+      margin-right: 10px;
+      margin-bottom: 8px;
+    }
+    .pbtn:hover { border-color: var(--gold); }
+    .pbtn-danger {
+      background: rgba(232,99,90,.15);
+      border-color: rgba(232,99,90,.3);
+      color: var(--err);
+    }
+    .pbtn-danger:hover { background: rgba(232,99,90,.25); }
+    .psel {
+      background: var(--surf);
+      border: 1px solid var(--bdr);
+      border-radius: 9px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      cursor: pointer;
+      width: auto;
+      min-width: 160px;
+    }
+    .premium-badge {
+      background: var(--prem-bg);
+      border: 1px solid var(--gold-border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: var(--gold);
+      font-weight: 600;
+      display: inline-block;
+      margin-left: 8px;
+    }
+    .upgrade-card {
+      background: linear-gradient(135deg, rgba(201,168,76,.08), rgba(201,168,76,.02));
+      border: 1px solid var(--gold-border);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .upgrade-btn {
+      background: linear-gradient(135deg, var(--gold), #a07830);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: #000;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      margin-top: 10px;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 8px 16px;
+      background: rgba(201,168,76,.1);
+      border-radius: 8px;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    hr { border-color: var(--bdr); margin: 20px 0; }
+    .msg-toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surf2);
+      border: 1px solid var(--gold-border);
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-size: 13px;
+      z-index: 1000;
+      animation: fadeOut 3s forwards;
+    }
+    @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>⚙️ Settings</h1>
+  <div class="sub">Customize your Islamic Chat experience. Changes are saved automatically.</div>
+
+  <!-- Theme -->
+  <div class="vcard">
+    <div class="vref">🌓 Theme</div>
+    <button class="pbtn" id="themeBtn">Switch to Light Mode</button>
+    <span style="font-size: 11px; color: var(--muted);">Affects the main app as well.</span>
+  </div>
+
+  <!-- Prayer Notifications -->
+  <div class="vcard">
+    <div class="vref">🔔 Prayer Notifications</div>
+    <button class="pbtn" id="notifBtn">Enable Notifications</button>
+    <span style="font-size: 11px; color: var(--muted);">Get notified at each prayer time (browser permission).</span>
+  </div>
+
+  <!-- Chat History -->
+  <div class="vcard">
+    <div class="vref">💬 Chat History</div>
+    <button class="pbtn" id="clearHistoryBtn">Clear All Conversations</button>
+    <button class="pbtn" id="exportHistoryBtn">Export as JSON</button>
+    <span style="font-size: 11px; color: var(--muted);">Clearing will delete all your messages from this device.</span>
+  </div>
+
+  <!-- Account Section (hidden until login) -->
+  <div id="accountSection" style="display: none;">
+    <div class="vcard">
+      <div class="vref">👤 Account</div>
+      <p style="margin-bottom: 12px; font-size: 14px;"><strong>Email:</strong> <span id="userEmail"></span></p>
+      <button class="pbtn" id="manageSubBtn">Manage Subscription</button>
+      <button class="pbtn pbtn-danger" id="deleteAccountBtn">Delete Account</button>
+      <span style="font-size: 11px; color: var(--muted); display: block; margin-top: 8px;">Manage subscription or permanently delete your account.</span>
+    </div>
+  </div>
+
+  <!-- Premium Settings (only visible if premium) -->
+  <div id="premiumSettings" style="display: none;">
+    <div class="vcard">
+      <div class="vref">✨ AI Response Style <span class="premium-badge">PREMIUM</span></div>
+      <select class="psel" id="aiStyle">
+        <option value="brief">Brief</option>
+        <option value="detailed">Detailed</option>
+        <option value="references">With References</option>
+      </select>
+      <span style="font-size: 11px; color: var(--muted); margin-left: 12px;">How detailed AI answers should be.</span>
+    </div>
+    <div class="vcard">
+      <div class="vref">🎵 Audio Quality <span class="premium-badge">PREMIUM</span></div>
+      <select class="psel" id="audioQuality">
+        <option value="low">Low (32 kbps)</option>
+        <option value="high">High (128 kbps)</option>
+      </select>
+      <span style="font-size: 11px; color: var(--muted); margin-left: 12px;">Higher quality uses more data.</span>
+    </div>
+  </div>
+
+  <!-- Upgrade teaser (shown if not premium) -->
+  <div id="upgradeTeaser" style="display: none;">
+    <div class="upgrade-card">
+      <span style="font-size: 24px;">✨</span>
+      <h3 style="color: var(--gold); margin: 8px 0;">Unlock Premium Features</h3>
+      <p style="font-size: 13px; margin-bottom: 12px;">Get AI response styles, audio quality control, unlimited chats, deep tafsir, and more.</p>
+      <button class="upgrade-btn" id="upgradeFromSettingsBtn">Get Premium — $10/month →</button>
+    </div>
+  </div>
+
+  <hr>
+  <a href="/" class="back-link">← Back to Islamic Chat</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  // ==================== CONFIG (same as main app) ====================
+  const SUPABASE_URL = 'https://ioxbkfvqkcsmptjkkxvs.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlveGJrZnZxa2NzbXB0amtreHZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNDM4MzQsImV4cCI6MjA5MDgxOTgzNH0.I8e_jDFOdAsrmN7vhBAYg1Edw8uR0ThbMjHtlSPSa1w';
+  const FREEMIUS_URL = 'https://checkout.freemius.com/product/27119/plan/44927/';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  let currentUser = null;
+  let isPremium = false;
+
+  // ==================== Helper: show toast message ====================
+  function showMessage(msg, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'msg-toast';
+    toast.textContent = msg;
+    toast.style.background = isError ? 'rgba(232,99,90,0.9)' : 'var(--surf2)';
+    toast.style.borderColor = isError ? 'var(--err)' : 'var(--gold-border)';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // ==================== Theme ====================
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const isLight = savedTheme === 'light';
+    if (isLight) document.body.classList.add('light-mode');
+    const btn = document.getElementById('themeBtn');
+    btn.textContent = isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode';
+    btn.onclick = () => {
+      const newIsLight = !document.body.classList.contains('light-mode');
+      if (newIsLight) document.body.classList.add('light-mode');
+      else document.body.classList.remove('light-mode');
+      localStorage.setItem('theme', newIsLight ? 'light' : 'dark');
+      btn.textContent = newIsLight ? 'Switch to Dark Mode' : 'Switch to Light Mode';
+      showMessage('Theme changed');
+    };
+  }
+
+  // ==================== Prayer Notifications ====================
+  function initNotifications() {
+    const notifBtn = document.getElementById('notifBtn');
+    notifBtn.onclick = async () => {
+      if (!('Notification' in window)) {
+        showMessage('Your browser does not support notifications', true);
+        return;
+      }
+      if (Notification.permission === 'granted') {
+        localStorage.setItem('prayerNotif', 'enabled');
+        showMessage('Notifications already enabled. You will receive prayer alerts.');
+      } else if (Notification.permission === 'denied') {
+        showMessage('Permission denied. Please change browser settings to enable.', true);
+      } else {
+        const perm = await Notification.requestPermission();
+        if (perm === 'granted') {
+          localStorage.setItem('prayerNotif', 'enabled');
+          showMessage('Notifications enabled! You will receive prayer time alerts.');
+        } else {
+          showMessage('Notifications disabled', true);
+        }
+      }
+    };
+  }
+
+  // ==================== Chat History ====================
+  function initChatHistory() {
+    document.getElementById('clearHistoryBtn').onclick = () => {
+      if (confirm('⚠️ Delete all your conversations? This cannot be undone.')) {
+        localStorage.removeItem('ic_chat_history');
+        // Also clear any active chatHistory array in main app (if loaded)
+        showMessage('Chat history cleared');
+      }
+    };
+    document.getElementById('exportHistoryBtn').onclick = () => {
+      const history = localStorage.getItem('ic_chat_history');
+      if (!history || history === '{}') {
+        showMessage('No chat history to export', true);
+        return;
+      }
+      const blob = new Blob([history], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `islamic-chat-history-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showMessage('History exported');
+    };
+  }
+
+  // ==================== Account & Premium ====================
+  async function loadUserAndPremium() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.user) {
+      currentUser = session.user;
+      const { data: profile } = await sb.from('profiles').select('is_premium').eq('id', currentUser.id).single();
+      isPremium = profile?.is_premium || false;
+      // Check pending premium
+      if (!isPremium) {
+        const { data: pending } = await sb.from('pending_premium').select('*').eq('email', currentUser.email).single();
+        if (pending?.is_premium) {
+          await sb.from('profiles').update({ is_premium: true }).eq('id', currentUser.id);
+          await sb.from('pending_premium').delete().eq('email', currentUser.email);
+          isPremium = true;
+        }
+      }
+      // Show account section
+      document.getElementById('accountSection').style.display = 'block';
+      document.getElementById('userEmail').innerText = currentUser.email;
+    } else {
+      currentUser = null;
+      isPremium = false;
+      document.getElementById('accountSection').style.display = 'none';
+    }
+
+    // Update premium UI
+    const premiumDiv = document.getElementById('premiumSettings');
+    const upgradeDiv = document.getElementById('upgradeTeaser');
+    if (isPremium) {
+      premiumDiv.style.display = 'block';
+      upgradeDiv.style.display = 'none';
+      // Load saved premium preferences
+      const savedStyle = localStorage.getItem('aiStyle') || 'detailed';
+      const savedQuality = localStorage.getItem('audioQuality') || 'high';
+      document.getElementById('aiStyle').value = savedStyle;
+      document.getElementById('audioQuality').value = savedQuality;
+    } else {
+      premiumDiv.style.display = 'none';
+      upgradeDiv.style.display = 'block';
+    }
+  }
+
+  function initAccountButtons() {
+    document.getElementById('manageSubBtn').onclick = () => {
+      if (isPremium) {
+        window.open(FREEMIUS_URL, '_blank');
+      } else {
+        window.open(FREEMIUS_URL, '_blank');
+      }
+    };
+    document.getElementById('deleteAccountBtn').onclick = async () => {
+      if (!currentUser) return;
+      if (confirm('⚠️ Permanently delete your account and all data? This action is irreversible.')) {
+        // Call a secure backend endpoint (you can implement later). For now, ask to email.
+        showMessage('Please email support@islamicchat.online to request account deletion.', true);
+        // Alternatively, you could call a Supabase Edge Function.
+      }
+    };
+    document.getElementById('upgradeFromSettingsBtn').onclick = () => {
+      window.open(FREEMIUS_URL, '_blank');
+    };
+  }
+
+  function initPremiumSettings() {
+    const styleSelect = document.getElementById('aiStyle');
+    const qualitySelect = document.getElementById('audioQuality');
+    if (styleSelect) {
+      styleSelect.onchange = () => {
+        localStorage.setItem('aiStyle', styleSelect.value);
+        showMessage('AI response style saved');
+      };
+    }
+    if (qualitySelect) {
+      qualitySelect.onchange = () => {
+        localStorage.setItem('audioQuality', qualitySelect.value);
+        showMessage('Audio quality saved');
+      };
+    }
+  }
+
+  // ==================== Initialise ====================
+  window.addEventListener('DOMContentLoaded', async () => {
+    initTheme();
+    initNotifications();
+    initChatHistory();
+    await loadUserAndPremium();
+    initAccountButtons();
+    initPremiumSettings();
+  });
+</script>
+</body>
+</html>
