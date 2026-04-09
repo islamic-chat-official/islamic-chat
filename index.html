@@ -833,32 +833,34 @@ body.light-mode {
   --bdr: rgba(0,0,0,0.1);
 }
 
-/* Ensure footer stays at bottom of main area */
+/* Footer visibility – minimal fix */
+.app-footer {
+  flex-shrink: 0;
+  background: var(--bg);
+  width: 100%;
+}
+
+/* Ensure main area allows footer */
 .main {
   display: flex;
   flex-direction: column;
-  min-height: 0; /* allow shrinking */
+  min-height: 0;
   height: 100%;
 }
 
-/* Each view should fill the remaining space */
+/* Make each view fill remaining space */
 #vChat, #vQuran, #vHadith, #vDuas, #vAudio, #vLearn, #vPrayer {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* important for scrolling children */
+  min-height: 0;
 }
 
-/* Allow scrolling inside panels and chat messages */
-.panel, .welcome, .msgs {
+/* Keep scrollable areas working */
+.welcome, .msgs, .panel {
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-}
-
-/* Keep footer from shrinking */
-.app-footer {
-  flex-shrink: 0;
 }
 
 </style>
