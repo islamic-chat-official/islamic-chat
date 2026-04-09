@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Allow: /about-us
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: /refund-policy
+Allow: /contact-us
 
 Sitemap: https://islamicchat.online/sitemap.xml
