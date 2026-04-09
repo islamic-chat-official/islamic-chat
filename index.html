@@ -863,14 +863,22 @@ body.light-mode {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Minimal desktop fixes – preserve original layout */
+/* DESKTOP FIX – Sidebar and footer visibility */
 @media (min-width: 681px) {
-  /* Ensure sidebar content doesn't get cut off */
+  /* Ensure sidebar scrolls fully and shows all content */
   .sidebar {
-    overflow-y: auto;
+    overflow-y: auto !important;
+    max-height: 100vh;
+    padding-bottom: 20px;
   }
   
-  /* Footer stays at bottom of main area */
+  /* Premium banner should not be cut off */
+  .up-banner, .pt-w, .dua-w {
+    flex-shrink: 0;
+    margin-bottom: 16px;
+  }
+  
+  /* Main area – push footer to bottom */
   .main {
     display: flex;
     flex-direction: column;
@@ -878,8 +886,26 @@ body.light-mode {
     height: 100%;
   }
   
+  /* Each view takes remaining space, allows scrolling */
+  #vChat, #vQuran, #vHadith, #vDuas, #vAudio, #vLearn, #vPrayer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  
+  /* Scrollable content areas */
+  .welcome, .msgs, .panel {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Footer stays at bottom, never cut off */
   .app-footer {
     flex-shrink: 0;
+    margin-top: auto;
   }
 }
 
